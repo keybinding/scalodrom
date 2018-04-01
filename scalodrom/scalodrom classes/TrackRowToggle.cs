@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,6 +14,32 @@ namespace scalodrom.scalodrom_classes
     {
         public const string cs_doneImg = "images/done.png";
         public const string cs_sunImg = "images/sun.png";
+        #region udptest
+        BackgroundWorker bw = null;
+        void dowork()
+        {
+            TcpClient _soc;
+            _soc = new TcpClient();
+            IPAddress ipAddr = IPAddress.Parse("172.16.15.65");
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 5005);
+            _soc.Connect(ipEndPoint);
+            Byte[] sendBytes = Encoding.ASCII.GetBytes(x.ToString() + " " + y.ToString());
+            NetworkStream tcpStream = _soc.GetStream();
+             
+            tcpStream.Write(sendBytes, 0, sendBytes.Length);
+            //    tcpStream.Flush();
+            
+            _soc.Close();
+        }
+
+        static TrackRowToggle _trt;
+        static long x;
+        static long y;
+        static public void countCoords() {
+                    x = (82 - _trt.parentRow.index) * 41 + 21;
+                    y = _trt.parentRow.track.index * (1080 / 3) + _trt.index * ((1080 / 3) / 4) + ((1080 / 3) / 8);
+        }
+        #endregion
 
         private ICommand _toggleCmd;
         public ICommand toggleCmd
@@ -46,6 +74,12 @@ namespace scalodrom.scalodrom_classes
 
         private void Button_Click()
         {
+            #region test
+            _trt = this;
+            countCoords();
+            dowork();
+            #endregion
+
             if (i_currentImage == cs_sunImg)
             {
                 currentImage = cs_doneImg;
@@ -56,6 +90,12 @@ namespace scalodrom.scalodrom_classes
             }
         }
 
+        #region test
+        private void Bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            dowork();
+        }
+        #endregion
         private TrackRow _parentRow;
         public TrackRow parentRow { get { return _parentRow; } private set { _parentRow = value; } }
 
