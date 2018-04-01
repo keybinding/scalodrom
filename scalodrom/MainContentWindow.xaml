@@ -1,0 +1,27 @@
+﻿<Window x:Name="MainContentWindow1" x:Class="scalodrom.MainContentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:scalodrom"
+        mc:Ignorable="d"
+        Title="MainContentWindow" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="{x:Null}">
+    <Grid Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid  Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Background="#FF67B26D" Margin="5">
+                <Button x:Name="cb_users" Content="Пользователи" Click="cb_users_Click" Margin="0,10,0,0" Height="25"/>
+                <Button x:Name="cb_trainings" Content="Тренеровки" Click="cb_trainings_Click" Margin="0,5,0,0" Height="25"/>
+                <Button x:Name="cb_control" Content="Контроль" Click="cb_control_Click" Margin="0,5,0,0" Height="25"/>
+            </StackPanel>
+        </Grid>
+        <Frame x:Name="frame_content" Content="" Grid.Column="1" NavigationUIVisibility="Hidden" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+    </Grid>
+</Window>

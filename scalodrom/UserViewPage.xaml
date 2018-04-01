@@ -1,0 +1,32 @@
+﻿<Page x:Class="scalodrom.UserViewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:scalodrom"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="UserViewPage"
+      KeepAlive="False"
+      ShowsNavigationUI="False" Unloaded="Page_Unloaded">
+
+    <Grid x:Name="page_userView" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+        <TextBox x:Name="tb_firstname" HorizontalAlignment="Left" Height="23" Margin="76,68,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding currentTrainee.firstname}"/>
+        <TextBox x:Name="tb_middlename" HorizontalAlignment="Left" Height="23" Margin="76,96,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding currentTrainee.middlename}"/>
+        <TextBox x:Name="tb_lastname" HorizontalAlignment="Left" Height="23" Margin="76,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding currentTrainee.lastname}"/>
+        <DatePicker HorizontalAlignment="Left" Margin="75,153,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday" SelectedDate="{Binding currentTrainee.birthdate}"/>
+        <Label Content="Имя" HorizontalAlignment="Left" Margin="43,64,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right"/>
+        <Label Content="Отчество" HorizontalAlignment="Left" Margin="15,92,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right"/>
+        <Label Content="Фамилия" HorizontalAlignment="Left" Margin="16,36,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right"/>
+        <Label HorizontalAlignment="Left" Margin="1,144,0,0" VerticalAlignment="Top" Height="43" Width="70" HorizontalContentAlignment="Stretch">
+            <TextBlock TextWrapping="WrapWithOverflow" Width="61" TextAlignment="Right">
+               Дата рождения
+            </TextBlock>
+        </Label>
+        <Button x:Name="cb_save" HorizontalAlignment="Left" Margin="75,229,0,0" VerticalAlignment="Top" Width="35" ToolTip="Сохранить" Height="35" Click="cb_save_Click" IsEnabled="True">
+            <Image Source="images/save256.png"/>
+        </Button>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="137" Margin="239,40,-125,0" VerticalAlignment="Top" Width="186" Source="images/no-image-prod.jpg"/>
+
+    </Grid>
+</Page>

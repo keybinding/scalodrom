@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7796b1c048d142a9a692fb167ba13deb" Name="Diagram1">
+        <EntityTypeShape EntityType="project_dbModel.login" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="project_dbModel.trainee" Width="1.5" PointX="4.375" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="project_dbModel.FK_trainee_0_0" />
+        <AssociationConnector Association="project_dbModel.FK_trainee_1_0" />
+        <EntityTypeShape EntityType="project_dbModel.tr_path" Width="1.5" PointX="6.75" PointY="6.125" />
+        <EntityTypeShape EntityType="project_dbModel.training" Width="1.5" PointX="3" PointY="4.875" />
+        <AssociationConnector Association="project_dbModel.FK_training_0_0" />
+        <AssociationConnector Association="project_dbModel.FK_tr_path_0_0" />
+        <EntityTypeShape EntityType="project_dbModel.angle_series" Width="1.5" PointX="8.125" PointY="2.25" />
+        <AssociationConnector Association="project_dbModel.FK_angle_series_0_0" />
+        <EntityTypeShape EntityType="project_dbModel.grapple_series" Width="1.5" PointX="5.25" PointY="9.125" />
+        <AssociationConnector Association="project_dbModel.FK_grapple_series_0_0" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

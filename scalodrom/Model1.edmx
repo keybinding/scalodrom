@@ -1,0 +1,459 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="project_dbModel.Store" Provider="System.Data.SQLite.EF6" ProviderManifestToken="data source=&quot;C:\Users\rjews\Documents\Visual Studio 2015\Projects\scalodrom\scalodrom\project_db.db&quot;" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="angle_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_training" Type="integer" Nullable="false" />
+          <Property Name="order" Type="integer" Nullable="false" />
+          <Property Name="value" Type="integer" Nullable="false" />
+          <Property Name="duration" Type="integer" Nullable="false" />
+        </EntityType>
+        <EntityType Name="grapple_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_training" Type="integer" Nullable="false" />
+          <Property Name="track_num" Type="integer" Nullable="false" />
+          <Property Name="row_num" Type="integer" Nullable="false" />
+          <Property Name="grapple_num" Type="integer" Nullable="false" />
+        </EntityType>
+        <EntityType Name="login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="approved" Type="integer" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tr_path">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="num_path" Type="integer" Nullable="false" />
+          <Property Name="order" Type="integer" Nullable="false" />
+          <Property Name="id_training" Type="integer" Nullable="false" />
+          <Property Name="duration" Type="integer" Nullable="false" />
+          <Property Name="speed" Type="integer" Nullable="false" />
+        </EntityType>
+        <EntityType Name="trainee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="middlename" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="lastname" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="birthdate" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="create_date" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="id_user_create" Type="integer" Nullable="false" />
+          <Property Name="id_user_modified" Type="integer" />
+          <Property Name="modified_date" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="fullname" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+        </EntityType>
+        <EntityType Name="training">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="modif_date" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="id_login_modif" Type="integer" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_angle_series_0_0">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="angle_series" Type="Self.angle_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="angle_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_grapple_series_0_0">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="grapple_series" Type="Self.grapple_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="grapple_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tr_path_0_0">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="tr_path" Type="Self.tr_path" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tr_path">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trainee_0_0">
+          <End Role="login" Type="Self.login" Multiplicity="0..1" />
+          <End Role="trainee" Type="Self.trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_modified" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trainee_1_0">
+          <End Role="login" Type="Self.login" Multiplicity="1" />
+          <End Role="trainee" Type="Self.trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_create" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_training_0_0">
+          <End Role="login" Type="Self.login" Multiplicity="1" />
+          <End Role="training" Type="Self.training" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="training">
+              <PropertyRef Name="id_login_modif" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="project_dbModelStoreContainer">
+          <EntitySet Name="angle_series" EntityType="Self.angle_series" store:Type="Tables" />
+          <EntitySet Name="grapple_series" EntityType="Self.grapple_series" store:Type="Tables" />
+          <EntitySet Name="login" EntityType="Self.login" store:Type="Tables" />
+          <EntitySet Name="tr_path" EntityType="Self.tr_path" store:Type="Tables" />
+          <EntitySet Name="trainee" EntityType="Self.trainee" store:Type="Tables" />
+          <EntitySet Name="training" EntityType="Self.training" store:Type="Tables" />
+          <AssociationSet Name="FK_angle_series_0_0" Association="Self.FK_angle_series_0_0">
+            <End Role="training" EntitySet="training" />
+            <End Role="angle_series" EntitySet="angle_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK_grapple_series_0_0" Association="Self.FK_grapple_series_0_0">
+            <End Role="training" EntitySet="training" />
+            <End Role="grapple_series" EntitySet="grapple_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tr_path_0_0" Association="Self.FK_tr_path_0_0">
+            <End Role="training" EntitySet="training" />
+            <End Role="tr_path" EntitySet="tr_path" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trainee_0_0" Association="Self.FK_trainee_0_0">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trainee_1_0" Association="Self.FK_trainee_1_0">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_training_0_0" Association="Self.FK_training_0_0">
+            <End Role="login" EntitySet="login" />
+            <End Role="training" EntitySet="training" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="project_dbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login1" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="approved" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="trainee" Relationship="project_dbModel.FK_trainee_0_0" FromRole="login" ToRole="trainee" />
+          <NavigationProperty Name="trainee1" Relationship="project_dbModel.FK_trainee_1_0" FromRole="login" ToRole="trainee" />
+          <NavigationProperty Name="training" Relationship="project_dbModel.FK_training_0_0" FromRole="login" ToRole="training" />
+        </EntityType>
+        <EntityContainer Name="project_dbEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="login" EntityType="Self.login" />
+          <EntitySet Name="trainee" EntityType="project_dbModel.trainee" />
+          <AssociationSet Name="FK_trainee_0_0" Association="project_dbModel.FK_trainee_0_0">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trainee_1_0" Association="project_dbModel.FK_trainee_1_0">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <EntitySet Name="tr_path" EntityType="project_dbModel.tr_path" />
+          <EntitySet Name="training" EntityType="project_dbModel.training" />
+          <AssociationSet Name="FK_training_0_0" Association="project_dbModel.FK_training_0_0">
+            <End Role="login" EntitySet="login" />
+            <End Role="training" EntitySet="training" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tr_path_0_0" Association="project_dbModel.FK_tr_path_0_0">
+            <End Role="training" EntitySet="training" />
+            <End Role="tr_path" EntitySet="tr_path" />
+          </AssociationSet>
+          <EntitySet Name="angle_series" EntityType="project_dbModel.angle_series" />
+          <AssociationSet Name="FK_angle_series_0_0" Association="project_dbModel.FK_angle_series_0_0">
+            <End Role="training" EntitySet="training" />
+            <End Role="angle_series" EntitySet="angle_series" />
+          </AssociationSet>
+          <EntitySet Name="grapple_series" EntityType="project_dbModel.grapple_series" />
+          <AssociationSet Name="FK_grapple_series_0_0" Association="project_dbModel.FK_grapple_series_0_0">
+            <End Role="training" EntitySet="training" />
+            <End Role="grapple_series" EntitySet="grapple_series" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="trainee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="middlename" Type="String" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="lastname" Type="String" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="birthdate" Type="String" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="create_date" Type="String" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="id_user_create" Type="Int64" Nullable="false" />
+          <Property Name="id_user_modified" Type="Int64" />
+          <Property Name="modified_date" Type="String" />
+          <NavigationProperty Name="login" Relationship="project_dbModel.FK_trainee_0_0" FromRole="trainee" ToRole="login" />
+          <NavigationProperty Name="login1" Relationship="project_dbModel.FK_trainee_1_0" FromRole="trainee" ToRole="login" />
+          <Property Name="fullname" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_trainee_0_0">
+          <End Type="project_dbModel.login" Role="login" Multiplicity="0..1" />
+          <End Type="project_dbModel.trainee" Role="trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_modified" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trainee_1_0">
+          <End Type="project_dbModel.login" Role="login" Multiplicity="1" />
+          <End Type="project_dbModel.trainee" Role="trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_create" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tr_path">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="order" Type="Int64" Nullable="false" />
+          <Property Name="id_training" Type="Int64" Nullable="false" />
+          <Property Name="duration" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="project_dbModel.FK_tr_path_0_0" FromRole="tr_path" ToRole="training" />
+          <Property Name="speed" Type="Int64" Nullable="false" />
+          <Property Name="num_path" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="training">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="modif_date" Type="String" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="id_login_modif" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="login" Relationship="project_dbModel.FK_training_0_0" FromRole="training" ToRole="login" />
+          <NavigationProperty Name="tr_path" Relationship="project_dbModel.FK_tr_path_0_0" FromRole="training" ToRole="tr_path" />
+          <NavigationProperty Name="angle_series" Relationship="project_dbModel.FK_angle_series_0_0" FromRole="training" ToRole="angle_series" />
+          <NavigationProperty Name="grapple_series" Relationship="project_dbModel.FK_grapple_series_0_0" FromRole="training" ToRole="grapple_series" />
+        </EntityType>
+        <Association Name="FK_training_0_0">
+          <End Type="project_dbModel.login" Role="login" Multiplicity="1" />
+          <End Type="project_dbModel.training" Role="training" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="training">
+              <PropertyRef Name="id_login_modif" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tr_path_0_0">
+          <End Type="project_dbModel.training" Role="training" Multiplicity="1" />
+          <End Type="project_dbModel.tr_path" Role="tr_path" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tr_path">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="angle_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_training" Type="Int64" Nullable="false" />
+          <Property Name="order" Type="Int64" Nullable="false" />
+          <Property Name="value" Type="Int64" Nullable="false" />
+          <Property Name="duration" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="project_dbModel.FK_angle_series_0_0" FromRole="angle_series" ToRole="training" />
+        </EntityType>
+        <Association Name="FK_angle_series_0_0">
+          <End Type="project_dbModel.training" Role="training" Multiplicity="1" />
+          <End Type="project_dbModel.angle_series" Role="angle_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="angle_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="grapple_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_training" Type="Int64" Nullable="false" />
+          <Property Name="track_num" Type="Int64" Nullable="false" />
+          <Property Name="row_num" Type="Int64" Nullable="false" />
+          <Property Name="grapple_num" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="project_dbModel.FK_grapple_series_0_0" FromRole="grapple_series" ToRole="training" />
+        </EntityType>
+        <Association Name="FK_grapple_series_0_0">
+          <End Type="project_dbModel.training" Role="training" Multiplicity="1" />
+          <End Type="project_dbModel.grapple_series" Role="grapple_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="grapple_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="project_dbModelStoreContainer" CdmEntityContainer="project_dbEntities1">
+          <EntitySetMapping Name="login">
+            <EntityTypeMapping TypeName="project_dbModel.login">
+              <MappingFragment StoreEntitySet="login">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="login1" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="approved" ColumnName="approved" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trainee">
+            <EntityTypeMapping TypeName="project_dbModel.trainee">
+              <MappingFragment StoreEntitySet="trainee">
+                <ScalarProperty Name="fullname" ColumnName="fullname" />
+                <ScalarProperty Name="modified_date" ColumnName="modified_date" />
+                <ScalarProperty Name="id_user_modified" ColumnName="id_user_modified" />
+                <ScalarProperty Name="id_user_create" ColumnName="id_user_create" />
+                <ScalarProperty Name="create_date" ColumnName="create_date" />
+                <ScalarProperty Name="birthdate" ColumnName="birthdate" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="middlename" ColumnName="middlename" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tr_path">
+            <EntityTypeMapping TypeName="project_dbModel.tr_path">
+              <MappingFragment StoreEntitySet="tr_path">
+                <ScalarProperty Name="num_path" ColumnName="num_path" />
+                <ScalarProperty Name="speed" ColumnName="speed" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
+                <ScalarProperty Name="order" ColumnName="order" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="training">
+            <EntityTypeMapping TypeName="project_dbModel.training">
+              <MappingFragment StoreEntitySet="training">
+                <ScalarProperty Name="id_login_modif" ColumnName="id_login_modif" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="modif_date" ColumnName="modif_date" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="angle_series">
+            <EntityTypeMapping TypeName="project_dbModel.angle_series">
+              <MappingFragment StoreEntitySet="angle_series">
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="order" ColumnName="order" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="grapple_series">
+            <EntityTypeMapping TypeName="project_dbModel.grapple_series">
+              <MappingFragment StoreEntitySet="grapple_series">
+                <ScalarProperty Name="grapple_num" ColumnName="grapple_num" />
+                <ScalarProperty Name="row_num" ColumnName="row_num" />
+                <ScalarProperty Name="track_num" ColumnName="track_num" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
