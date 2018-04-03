@@ -98,7 +98,28 @@ namespace scalodrom
             {
                 a_trPath[i].deleteButtonClicked += (tr_pathWrapper s) => { DeleteTrPathItem(a_trPath, s, a_seriesCollection); return 1; };
                 a_trPath[i].addButtonClicked += (tr_pathWrapper s) => { AddTrPathItem(a_trPath, s, a_seriesCollection, a_num_path); return 1; };
+                a_trPath[i].PropertyChanged += TrainingViewModel_PropertyChanged;
             }
+        }
+
+        private void TrainingViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (db_context != null)
+            {
+                try
+                {
+                    db_context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.InnerException.ToString());
+                }
+            }
+            tr_pathWrapper l_wrapper = (sender as tr_pathWrapper);
+            path_graph_dict[l_wrapper.num_path][0].OnSeriesUpdateStart();
+            trPathNodeModel l_node = path_graph_dict[l_wrapper.num_path][0].ActualValues[(int)l_wrapper.order] as trPathNodeModel;
+            l_node.Speed = l_wrapper.speed;
+            path_graph_dict[l_wrapper.num_path][0].OnSeriesUpdatedFinish();
         }
 
         //Plot configuration according to DatabaseModel
@@ -200,10 +221,10 @@ namespace scalodrom
                 item.Next.order--;
             if(db_context != null)
             {
-                //db_context.tr_path.Remove(item.tr_path);
+                db_context.tr_path.Remove(item.tr_path);
                 try
                 {
-                    //db_context.SaveChanges();
+                    db_context.SaveChanges();
                 }
                 catch(Exception e)
                 {
@@ -250,10 +271,10 @@ namespace scalodrom
 
             if (db_context != null)
             {
-                //db_context.tr_path.Remove(item.tr_path);
+                db_context.tr_path.Add(l_newPath.tr_path);
                 try
                 {
-                    //db_context.SaveChanges();
+                    db_context.SaveChanges();
                 }
                 catch (Exception e)
                 {

@@ -16,6 +16,7 @@ using scalodrom.scalodrom_classes;
 using System.IO.Ports;
 using NModbus.Serial;
 using NModbus;
+using System.ComponentModel;
 
 namespace scalodrom
 {
@@ -36,8 +37,10 @@ namespace scalodrom
         bool _isPlaying;
         private int _currentTime;
         private int _maxTime;
+        private string _dbg;
         Task<bool> finished;
         List<trPathNodeModel> series1 = new List<trPathNodeModel>();
+        BackgroundWorker _bw;
 
         public const string c_playImage = "images/play_green.png";
         public const string c_pauseImage = "images/pause1.png";
@@ -120,9 +123,17 @@ namespace scalodrom
                         }
                         _currentIndex = 0;
                         _currentPoint = series1[0];
+                        MaxTime = (int) series1[series1.Count - 1].Start;
                         finished = Play();
                         finished.Start();
-                        finished.GetAwaiter().OnCompleted(() => { _currentIndex = 0; series1.Clear(); CurrentTime = 0; CurPrgBarValue = 0; });
+                        finished.GetAwaiter().OnCompleted(() => {
+                            _currentIndex = 0;
+                            series1.Clear();
+                            CurrentTime = 0;
+                            CurPrgBarValue = 0;
+                            CurrentPlayButtonImage = c_playImage;
+                            _isPlaying = false;
+                        });
                     }
                 }
                 else CurrentPlayButtonImage = c_pauseImage;
@@ -131,36 +142,6 @@ namespace scalodrom
 
         public Task<bool> Play()
         {
-            //return new Task<bool>(() => {
-            //    HiResTimer l_hrt = new HiResTimer();
-            //    Int64 curTime = l_hrt.Value;
-            //    Int64 initialTime = curTime;
-            //    Int64 timeSinceStart = 0;
-            //    Int64 fineGrainedCurTime = curTime;
-            //    Int64 maxTime = MaxTime * l_hrt.Frequency; 
-            //    while (CurrentTime < MaxTime)
-            //    {
-            //        Int64 newCurTime = l_hrt.Value;
-            //        Int64 timeElapsed = newCurTime - curTime;
-            //        if (IsPlaying)
-            //        {
-            //            timeSinceStart += newCurTime - fineGrainedCurTime;
-            //            float k = ((float)timeSinceStart / (float)maxTime);
-            //            float v = k * MaxPrgBarValue;
-            //            CurPrgBarValue = (int)v;
-            //        }
-            //        fineGrainedCurTime = newCurTime;
-            //        if (timeElapsed / l_hrt.Frequency == 1)
-            //        {
-            //            if (_isPlaying)
-            //            {
-            //                CurrentTime += 1;
-            //            }
-            //            curTime = newCurTime;
-            //        }
-            //    }
-            //    return true;
-            //});
             return new Task<bool>(() =>
             {
                 HiResTimer l_hrt = new HiResTimer();
@@ -210,6 +191,20 @@ namespace scalodrom
             }
         }
 
+        public string Dbg
+        {
+            get
+            {
+                return _dbg;
+            }
+
+            set
+            {
+                _dbg = value;
+                Notify("Dbg");
+            }
+        }
+
         trPathNodeModel _currentPoint;
         private int _currentIndex;
         private SerialPort _slavePort;
@@ -220,8 +215,19 @@ namespace scalodrom
             CurrentPlayButtonImage = c_playImage;
             IsPlaying = false;
             CurrentTime = 0;
-            MaxTime = CalculateTrainingLength();
             MaxPrgBarValue = CalculatePrgBarLength();
+            if (_bw == null)
+            {
+                _bw = new BackgroundWorker();
+                _bw.WorkerSupportsCancellation = true;
+                _bw.DoWork += Bw_DoWork;
+                _bw.RunWorkerAsync();
+            }
+        }
+
+        private void Bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ListenPort();
         }
 
         private int CalculatePrgBarLength()
@@ -270,7 +276,7 @@ namespace scalodrom
                     //i = "c-i read addr = " + args.StartingAddress.ToString() + " cnt = " + args.Points.Length.ToString();
                     if (false)//switchAngle)
                     {
-                        dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true });
+                        //dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true });
                         //switchAngle = false;
                     }
                     else
@@ -290,54 +296,50 @@ namespace scalodrom
                 else
                 {
                     //if (!adr.Contains(args.StartingAddress)) adr.Add(args.StartingAddress);
-
-                    string dbg = "addr = ";
+                    
                     if (args.StartingAddress == 5)
                     {
-                        //i = args.StartingAddress.ToString() + " " + args.Points.Length.ToString();
-                        dbg += 5.ToString();
-                        dbg += " cnt = " + args.Points.Length.ToString();
-
                         float f = 0.0f;
                         if (_currentPoint != null) f = _currentPoint.Speed;
                         int m = (int)f;
                         byte[] b = BitConverter.GetBytes(m);
                         ushort high = BitConverter.ToUInt16(b, 0);
                         ushort low = BitConverter.ToUInt16(b, 2);
-                        //dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low, high, low, high, low });
+                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low, high, low, high, low });
                     }
                     else if (args.StartingAddress == 1)
                     {
                         //172.16.15.65
-                        float f = 20.0f;
+                        float f = 0.0f;
+                        if (IsPlaying)
+                        {
+                            if (_currentPoint != null) f = _currentPoint.Speed;
+                            else f = 0.0f;
+                        }
+                        else
+                        {
+                            f = 0.0f;
+                        }
+
+                        Dbg = f.ToString();
                         byte[] b = BitConverter.GetBytes(f);
                         ushort high = BitConverter.ToUInt16(b, 0);
                         ushort low = BitConverter.ToUInt16(b, 2);
+                        //_currentPoint
 
-                        float f1 = 50.0f;
-                        byte[] b1 = BitConverter.GetBytes(f1);
-                        ushort high1 = BitConverter.ToUInt16(b1, 0);
-                        ushort low1 = BitConverter.ToUInt16(b1, 2);
-
-                        float f2 = -50.0f;
-                        byte[] b2 = BitConverter.GetBytes(f2);
-                        ushort high2 = BitConverter.ToUInt16(b2, 0);
-                        ushort low2 = BitConverter.ToUInt16(b2, 2);
-
-                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low, high1, low1, high2, low2 });
+                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low, high, low, high, low });
                     }
                     else if (args.StartingAddress == 9)
                     {
                         //h = args.StartingAddress.ToString() + " " + args.Points.Length.ToString();
-                        dbg += args.StartingAddress.ToString();
-                        dbg += " cnt = " + args.Points.Length.ToString();
+                        Dbg += args.StartingAddress.ToString();
+                        Dbg += " cnt = " + args.Points.Length.ToString();
                         float f = 0.0f;
                         if (_currentPoint != null) f = _currentPoint.Speed;
                         byte[] b = BitConverter.GetBytes(f);
                         ushort high = BitConverter.ToUInt16(b, 0);
                         ushort low = BitConverter.ToUInt16(b, 2);
-                        //dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low });
-
+                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low });
                     }
                     else
                     {
@@ -362,7 +364,21 @@ namespace scalodrom
                 }
             };
             slaveNetwork.AddSlave(slave1);
-            slaveNetwork.ListenAsync();
+
+            try
+            {
+                slaveNetwork.ListenAsync();
+            }
+            catch (Exception exc){
+                
+            }
+            
+        }
+
+        public void Unload()
+        {
+            if (_bw.IsBusy) _bw.CancelAsync();
+            if (_slavePort.IsOpen) _slavePort.Close();
         }
 
     }
@@ -380,6 +396,11 @@ namespace scalodrom
         private void bt_play_Click(object sender, RoutedEventArgs e)
         {
             model.PlayClicked();
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            model.Unload();
         }
     }
 }

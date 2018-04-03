@@ -7,7 +7,7 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
-      Title="PlayTrainingPage">
+      Title="PlayTrainingPage" Unloaded="Page_Unloaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
@@ -22,6 +22,7 @@
                 <RowDefinition Height="50*"></RowDefinition>
                 <RowDefinition Height="50*"></RowDefinition>
             </Grid.RowDefinitions>
+            
             <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
                 <TextBlock Text="Полотно 1 (Левое)" FontSize="15" Margin="15" FontWeight="Bold"></TextBlock>
                 <lvc:CartesianChart Height="200" Margin="5,5,5,15" Series="{Binding initialModel.seriesCollection1}" Background="AliceBlue" BorderBrush="{DynamicResource {x:Static SystemColors.DesktopBrushKey}}" ScrollBarFill="{DynamicResource {x:Static SystemColors.DesktopBrushKey}}" BorderThickness="1">
@@ -66,6 +67,7 @@
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
             </StackPanel>
+            
         </Grid>
         <StackPanel Name="PlayerPanel" Orientation="Horizontal" Grid.Row="1">
             <Button Name="bt_stop" Width="40" Height="40" Margin="50,0,0,0">
@@ -82,6 +84,7 @@
             </Button>
             <ProgressBar Name="PrgBar" Height="50" Width="800" Margin="15,0,0,0" Value="{Binding CurPrgBarValue}" Maximum="{Binding MaxPrgBarValue}" Minimum="0"></ProgressBar>
             <TextBox Name="tb_countDown" IsReadOnly="True" Height="30" Text="{Binding CurrentTime}" FontSize="20" Margin="15,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>
+            <!--<TextBox Name="tb_dbg" IsReadOnly="True" Height="30" Text="{Binding Dbg}" FontSize="20" Margin="50,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>-->
         </StackPanel>
     </Grid>
 </Page>
