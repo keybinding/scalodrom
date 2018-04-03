@@ -15,6 +15,7 @@ namespace scalodrom.scalodrom_classes
         public const string cs_doneImg = "images/done.png";
         public const string cs_sunImg = "images/sun.png";
         #region udptest
+        /*
         BackgroundWorker bw = null;
         void dowork()
         {
@@ -38,7 +39,7 @@ namespace scalodrom.scalodrom_classes
         static public void countCoords() {
                     x = (82 - _trt.parentRow.index) * 41 + 21;
                     y = _trt.parentRow.track.index * (1080 / 3) + _trt.index * ((1080 / 3) / 4) + ((1080 / 3) / 8);
-        }
+        }*/
         #endregion
 
         private ICommand _toggleCmd;
@@ -74,12 +75,15 @@ namespace scalodrom.scalodrom_classes
 
         private void Button_Click()
         {
+            
             #region test
+            /*
             _trt = this;
             countCoords();
             dowork();
+            */
             #endregion
-
+            
             if (i_currentImage == cs_sunImg)
             {
                 currentImage = cs_doneImg;
@@ -89,12 +93,13 @@ namespace scalodrom.scalodrom_classes
                 currentImage = cs_sunImg;
             }
         }
-
+        
         #region test
+        /*
         private void Bw_DoWork(object sender, DoWorkEventArgs e)
         {
             dowork();
-        }
+        }*/
         #endregion
         private TrackRow _parentRow;
         public TrackRow parentRow { get { return _parentRow; } private set { _parentRow = value; } }

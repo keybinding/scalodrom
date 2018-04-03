@@ -216,8 +216,8 @@ namespace scalodrom
         {
             if (item == null) return;
             int idx = (int)item.order + 1;
-            long l_midDuration = 10;
-            tr_pathWrapper l_newPath = new tr_pathWrapper(new tr_path() { id_training = training.id, num_path = a_num_path, duration = l_midDuration, order = idx, speed = a_col[idx-1].speed });
+            long l_minDuration = 10;
+            tr_pathWrapper l_newPath = new tr_pathWrapper(new tr_path() { id_training = training.id, num_path = a_num_path, duration = l_minDuration, order = idx, speed = a_col[idx-1].speed });
             
             if (idx < a_col.Count) {
                 a_col.Insert(idx, l_newPath);
@@ -237,16 +237,16 @@ namespace scalodrom
             l_newPath.deleteButtonClicked += (tr_pathWrapper s) => { DeleteTrPathItem(a_col, s, a_graf); return 1; };
             l_newPath.addButtonClicked += (tr_pathWrapper s) => { AddTrPathItem(a_col, s, a_graf, a_num_path); return 1; };
 
-            //trPathNodeModel l_newPoint = new trPathNodeModel() { Speed = (a_graf[0].ActualValues[idx - 1] as trPathNodeModel).Speed, Start = (a_graf[0].ActualValues[idx - 1] as trPathNodeModel).Start + l_midDuration };
+            trPathNodeModel l_newPoint = new trPathNodeModel() { Speed = (a_graf[0].ActualValues[idx - 1] as trPathNodeModel).Speed, Start = (a_graf[0].ActualValues[idx - 1] as trPathNodeModel).Start + a_col[idx-1].duration };
 
-            //for (int i = idx; i < a_col.Count; ++i)
-            //{
-            //    (a_graf[0].ActualValues[idx] as trPathNodeModel).Start += l_midDuration;
-            //}
-            //a_graf[0].ActualValues.Insert(idx, l_newPoint);
-            //int l_pointCnt = a_graf[0].ActualValues.Count;
-            //if (idx == l_pointCnt - 2)
-            //    (a_graf[0].ActualValues[l_pointCnt - 1] as trPathNodeModel).Speed = (a_graf[0].ActualValues[l_pointCnt - 2] as trPathNodeModel).Speed;
+            for (int i = idx; i < a_graf[0].ActualValues.Count; ++i)
+            {
+                (a_graf[0].ActualValues[i] as trPathNodeModel).Start += a_col[idx].duration;
+            }
+            a_graf[0].ActualValues.Insert(idx, l_newPoint);
+            int l_pointCnt = a_graf[0].ActualValues.Count;
+            if (idx == l_pointCnt - 2)
+                (a_graf[0].ActualValues[l_pointCnt - 1] as trPathNodeModel).Speed = (a_graf[0].ActualValues[l_pointCnt - 2] as trPathNodeModel).Speed;
 
             if (db_context != null)
             {
