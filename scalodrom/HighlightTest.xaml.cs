@@ -46,6 +46,7 @@ namespace scalodrom
         private int _pos;
         private string _dbg;
         private bool _isPlaying;
+        private int _targetPos;
 
         public int X
         {
@@ -122,6 +123,20 @@ namespace scalodrom
             set
             {
                 _isPlaying = value; Notify("IsPlaying");
+            }
+        }
+
+        public int TargetPos
+        {
+            get
+            {
+                return _targetPos;
+            }
+
+            set
+            {
+                _targetPos = value;
+                Notify("TargetPos");
             }
         }
 
@@ -236,7 +251,7 @@ namespace scalodrom
                             ushort low = BitConverter.ToUInt16(b, 2);
                             //_currentPoint
                             ushort nil = 0;
-                            dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low, high, low, high, low}); //{ high, low, nil, nil, nil, nil });
+                            dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] {  nil, nil, nil, nil, high, low }); //{ high, low, nil, nil, nil, nil });
                             //Dbg = f.ToString();
                         }
                         else if (args.StartingAddress == 9)
@@ -266,24 +281,28 @@ namespace scalodrom
                     {
                         if (args.StartingAddress == 9)
                         {
-
+                            
                         }
                         else if (args.StartingAddress == 13)
                         {
-
+                            
                         }
                         else if (args.StartingAddress == 11)
                         {
                             Pos = args.Points[0];
 
-                            if (args.Points[0] == 0)
+                            if (args.Points[0] == TargetPos)
                             {
                                 IsPlaying = false;
                             }
-                            X = (int)(1280 + args.Points[0] * 8.89);
+                            X = 220;// (int)(1280 + args.Points[0] * 8.89);
                             Y = 220;
                             if (Pos != _prevPos) _sendMessage = true;
                             _prevPos = Pos;
+                        }
+                        else if(args.StartingAddress == 7)
+                        {
+                            
                         }
                     }
                     else

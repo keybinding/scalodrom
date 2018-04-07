@@ -15,6 +15,7 @@
         <TextBox x:Name="tbY" HorizontalAlignment="Left" Height="23" Margin="120,121,0,0" TextWrapping="Wrap" Text="{Binding Y}" VerticalAlignment="Top" Width="55"/>
         <TextBox x:Name="tbSpeed" HorizontalAlignment="Left" Height="23" Margin="120,149,0,0" TextWrapping="Wrap" Text="{Binding Speed}" VerticalAlignment="Top" Width="55"/>
         <TextBox x:Name="tbPos" HorizontalAlignment="Left" Height="23" Margin="120,177,0,0" TextWrapping="Wrap" Text="{Binding Pos}" VerticalAlignment="Top" Width="55"/>
+        <TextBox x:Name="tbTargetPos" HorizontalAlignment="Left" Height="23" Margin="195,177,0,0" TextWrapping="Wrap" Text="{Binding TargetPos}" VerticalAlignment="Top" Width="55"/>
         <TextBox x:Name="tbDbg" HorizontalAlignment="Left" Height="23" Margin="32,234,0,0" TextWrapping="Wrap" Text="{Binding Dbg}" VerticalAlignment="Top" Width="120"/>
     </Grid>
 </Page>
