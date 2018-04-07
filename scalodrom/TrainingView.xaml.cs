@@ -18,6 +18,7 @@ using LiveCharts.Wpf;
 using LiveCharts.Configurations;
 using scalodrom.wrappers;
 using scalodrom.scalodrom_classes;
+using System.ComponentModel;
 
 namespace scalodrom
 {
@@ -25,10 +26,22 @@ namespace scalodrom
     /// Interaction logic for TrainingView.xaml
     /// </summary>
     /// 
-    public class trPathNodeModel
+    public class trPathNodeModel : PropertyChangedNotifier
     {
-        public long Start { get; set; }
-        public float Speed { get; set; }
+        public long Start {  get { return _start; }
+            set
+            {
+                _start = value;
+                Notify("Start");
+            }
+        }
+        
+
+        public float Speed { get { return _speed;} set { _speed = value; Notify("Speed"); } }
+
+        private long _start;
+
+        private float _speed;
     }
 
     public class TrainingViewModel : PropertyChangedNotifier
@@ -116,10 +129,17 @@ namespace scalodrom
                 }
             }
             tr_pathWrapper l_wrapper = (sender as tr_pathWrapper);
-            path_graph_dict[l_wrapper.num_path][0].OnSeriesUpdateStart();
             trPathNodeModel l_node = path_graph_dict[l_wrapper.num_path][0].ActualValues[(int)l_wrapper.order] as trPathNodeModel;
-            l_node.Speed = l_wrapper.speed;
-            path_graph_dict[l_wrapper.num_path][0].OnSeriesUpdatedFinish();
+            if (e.PropertyName == "speed")
+            {
+                l_node.Speed = l_wrapper.speed;
+                if (l_wrapper.order == path_graph_dict[l_wrapper.num_path][0].ActualValues.Count - 2)
+                    (path_graph_dict[l_wrapper.num_path][0].ActualValues[(int)l_wrapper.order + 1] as trPathNodeModel).Speed = l_wrapper.speed;
+            }
+            else if (e.PropertyName == "duration")
+            {
+
+            }
         }
 
         //Plot configuration according to DatabaseModel

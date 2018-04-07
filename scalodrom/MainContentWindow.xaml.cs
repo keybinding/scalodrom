@@ -38,7 +38,7 @@ namespace scalodrom
 
         private void cb_control_Click(object sender, RoutedEventArgs e)
         {
-
+            frame_content.Content = new HighlightTest();
         }
     }
 }

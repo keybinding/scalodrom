@@ -149,6 +149,9 @@
     <Compile Include="grapple_series.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="HighlightTest.xaml.cs">
+      <DependentUpon>HighlightTest.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainContentWindow.xaml.cs">
       <DependentUpon>MainContentWindow.xaml</DependentUpon>
     </Compile>
@@ -191,6 +194,10 @@
     </Compile>
     <Compile Include="wrappers\tr_pathWrapper.cs" />
     <Page Include="ClimbPathView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HighlightTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
