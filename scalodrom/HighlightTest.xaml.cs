@@ -299,7 +299,7 @@ namespace scalodrom
 
                             if (Pos != _prevPos)
                             {
-                                X = (int)Math.Round(175.2f + 9.2f * (Pos));// (int)(1280 + args.Points[0] * 8.89);
+                                X = (int)Math.Round(170.2f + 9.2f * (Pos));// (int)(1280 + args.Points[0] * 8.89);
                                 Y = 590;// 580 + (int)Math.Round(10.3f * (Pos));
                                 _sendMessage = true;
                             }
