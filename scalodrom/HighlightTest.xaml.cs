@@ -47,6 +47,7 @@ namespace scalodrom
         private string _dbg;
         private bool _isPlaying;
         private int _targetPos;
+        private string _ip = "172.16.15.176";
 
         public int X
         {
@@ -148,7 +149,7 @@ namespace scalodrom
                 if (_sendMessage)
                 {
                     _sendMessage = false;
-                    IPAddress ipAddr = IPAddress.Parse("172.16.15.65");
+                    IPAddress ipAddr = IPAddress.Parse(_ip);
                     IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 5005);
 
                     _soc = new TcpClient();
@@ -238,7 +239,7 @@ namespace scalodrom
                             float f = 0.0f;
                             if (IsPlaying)
                             {
-                                f = Speed;
+                                f = Speed; 
                             }
                             else
                             {
@@ -251,7 +252,7 @@ namespace scalodrom
                             ushort low = BitConverter.ToUInt16(b, 2);
                             //_currentPoint
                             ushort nil = 0;
-                            dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] {  nil, nil, nil, nil, high, low }); //{ high, low, nil, nil, nil, nil });
+                            dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] {  nil, nil, nil, nil, high, low, }); //{ high, low, nil, nil, nil, nil });
                             //Dbg = f.ToString();
                         }
                         else if (args.StartingAddress == 9)
@@ -295,9 +296,13 @@ namespace scalodrom
                             {
                                 IsPlaying = false;
                             }
-                            X = 220;// (int)(1280 + args.Points[0] * 8.89);
-                            Y = 220;
-                            if (Pos != _prevPos) _sendMessage = true;
+
+                            if (Pos != _prevPos)
+                            {
+                                X = (int)Math.Round(175.2f + 9.2f * (Pos));// (int)(1280 + args.Points[0] * 8.89);
+                                Y = 590;// 580 + (int)Math.Round(10.3f * (Pos));
+                                _sendMessage = true;
+                            }
                             _prevPos = Pos;
                         }
                         else if(args.StartingAddress == 7)
@@ -344,6 +349,35 @@ namespace scalodrom
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             IsPlaying = !IsPlaying;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            SendMessageAsync(Pos.ToString());
+        }
+
+        private async Task SendMessageAsync(string a_v)
+        {
+            
+            {
+                _sendMessage = false;
+                IPAddress ipAddr = IPAddress.Parse(_ip);
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 5005);
+
+                _soc = new TcpClient();
+                try
+                {
+                    _soc.Connect(ipEndPoint);
+                    NetworkStream tcpStream = _soc.GetStream();
+                    Byte[] sendBytes = Encoding.ASCII.GetBytes(a_v);
+                    await tcpStream.WriteAsync(sendBytes, 0, sendBytes.Length);
+                    _soc.Close();
+                }
+                catch
+                {
+                    if (_soc.Connected) _soc.Close();
+                }
+            }
         }
     }
 }
