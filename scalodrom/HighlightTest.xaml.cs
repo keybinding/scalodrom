@@ -8,6 +8,8 @@ using System.IO.Ports;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -47,7 +49,7 @@ namespace scalodrom
         private string _dbg;
         private bool _isPlaying;
         private int _targetPos;
-        private string _ip = "172.16.15.176";
+        private string _ip = "169.254.123.110";
 
         public int X
         {
@@ -146,7 +148,7 @@ namespace scalodrom
         {
            while (true)
            {
-                if (_sendMessage)
+                if (true)
                 {
                     _sendMessage = false;
                     IPAddress ipAddr = IPAddress.Parse(_ip);
@@ -236,6 +238,7 @@ namespace scalodrom
                         else if (args.StartingAddress == 1)
                         {
                         //172.16.15.65
+                        //1560 220
                             float f = 0.0f;
                             if (IsPlaying)
                             {
@@ -330,6 +333,7 @@ namespace scalodrom
         public HighlightTest()
         {
             InitializeComponent();
+            /*
             if (_bwFrameHighlight == null)
             {
                 _bwFrameHighlight = new BackgroundWorker();
@@ -337,12 +341,15 @@ namespace scalodrom
                 _bwFrameHighlight.DoWork += ThreadWork;
                 _bwFrameHighlight.RunWorkerAsync();
             }
+            */
+            /*
             if (_bwScalodrom == null)
             {
                 _bwScalodrom = new BackgroundWorker();
                 _bwScalodrom.DoWork += ThreadScalWork;
                 _bwScalodrom.RunWorkerAsync();
-            }
+            }*/
+            EmitPositions();
             DataContext = this;
         }
 
@@ -377,6 +384,79 @@ namespace scalodrom
                 {
                     if (_soc.Connected) _soc.Close();
                 }
+            }
+        }
+
+        private async Task SendMessageAsync(HighlightPacket a_v)
+        {
+
+            {
+                _sendMessage = false;
+                IPAddress ipAddr = IPAddress.Parse(_ip);
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 5005);
+
+                _soc = new TcpClient();
+                try
+                {
+                    _soc.Connect(ipEndPoint);
+                    NetworkStream tcpStream = _soc.GetStream();
+                    //Byte[] sendBytes = Encoding.ASCII.GetBytes(a_v);
+                    //await tcpStream.WriteAsync(sendBytes, 0, sendBytes.Length);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(HighlightPacket));
+                    ser.WriteObject(tcpStream, a_v);
+                    _soc.Close();
+                }
+                catch
+                {
+                    if (_soc.Connected) _soc.Close();
+                }
+            }
+        }
+
+        private int _delay = 500;
+
+        public int Delay
+        {
+            get
+            {
+                return _delay;
+            }
+
+            set
+            {
+                _delay = value;
+                Notify("Delay");
+            }
+        }
+
+        [DataContract]
+        class HighlightPacket
+        {
+            [DataMember]
+            public int[] v;
+
+            [DataMember]
+            public int[][] p1;
+
+            [DataMember]
+            public int[][] p2;
+
+            [DataMember]
+            public int[][] p3;
+        }
+
+        private async Task EmitPositions()
+        {
+            while (true)
+            {
+                await Task.Delay(_delay);
+                HighlightPacket l_p = new HighlightPacket();
+                l_p.v = new int[] { 1, 2, 3 };
+                Pos++;
+                l_p.p1 = new int[3][] { new int[] { 100 + Pos * 3, 200 }, new int[] { 200 + Pos * 3, 200 } , new int[] { 300 + Pos * 3, 200 } };
+                l_p.p2 = new int[1][] { new int[] { 3, 3 } };
+                l_p.p3 = new int[2][] { new int[] { 4, 4 }, new int[] { 5, 5 } };
+                SendMessageAsync(l_p);
             }
         }
     }
