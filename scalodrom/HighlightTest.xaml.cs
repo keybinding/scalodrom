@@ -27,6 +27,7 @@ namespace scalodrom
     /// <summary>
     /// Interaction logic for HighlightTest.xaml
     /// </summary>
+    /// //y=4.831x+0.1525
     public partial class HighlightTest : Page, System.ComponentModel.INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -330,6 +331,8 @@ namespace scalodrom
             }
         }
 
+        
+
         public HighlightTest()
         {
             InitializeComponent();
@@ -342,13 +345,16 @@ namespace scalodrom
                 _bwFrameHighlight.RunWorkerAsync();
             }
             */
-            /*
+            i_grapples = new List<int>() { 0, 6, 17 };
+            i_startCoords = new List<int[]> { new int[2] { 1480, 640 }, new int[2] { 1480, 640 }, new int[2] { 1480, 640 } };
+            i_startPos = new List<int> { 0, 29, 49 };
+            
             if (_bwScalodrom == null)
             {
                 _bwScalodrom = new BackgroundWorker();
                 _bwScalodrom.DoWork += ThreadScalWork;
                 _bwScalodrom.RunWorkerAsync();
-            }*/
+            }
             EmitPositions();
             DataContext = this;
         }
@@ -444,18 +450,31 @@ namespace scalodrom
             [DataMember]
             public int[][] p3;
         }
-
+        List<int> i_grapples;
+        List<int> i_startPos;
+        List<int[]> i_startCoords;
+        
         private async Task EmitPositions()
         {
             while (true)
             {
                 await Task.Delay(_delay);
                 HighlightPacket l_p = new HighlightPacket();
-                l_p.v = new int[] { 1, 2, 3 };
-                Pos++;
-                l_p.p1 = new int[3][] { new int[] { 100 + Pos * 3, 200 }, new int[] { 200 + Pos * 3, 200 } , new int[] { 300 + Pos * 3, 200 } };
-                l_p.p2 = new int[1][] { new int[] { 3, 3 } };
-                l_p.p3 = new int[2][] { new int[] { 4, 4 }, new int[] { 5, 5 } };
+                int curPos = _pos;
+                int curSpeed = _speed;
+                l_p.v = new int[] { 0, _speed, 0 };
+                l_p.p1 = new int[0][] {};
+                //l_p.p2 = new int[i_grapples.Count][] { new int[] { 500, 400 } };
+                List<int[]> curCoords = new List<int[]>();
+                l_p.p3 = new int[0][] {};
+                for (int i = 0; i != i_grapples.Count; ++i)
+                {
+                    int[] pointCoords = new int[2];
+                    pointCoords[0] = (int) (i_startCoords[i][0] + (curPos - i_startPos[i]) * (9.2f));
+                    pointCoords[1] = 640;
+                    curCoords.Add(pointCoords);
+                }
+                l_p.p2 = curCoords.ToArray();
                 SendMessageAsync(l_p);
             }
         }
