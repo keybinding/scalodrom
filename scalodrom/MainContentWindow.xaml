@@ -17,9 +17,10 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="1" Background="#FF67B26D" Margin="5">
-                <Button x:Name="cb_users" Content="Пользователи" Click="cb_users_Click" Margin="0,10,0,0" Height="25"/>
-                <Button x:Name="cb_trainings" Content="Тренеровки" Click="cb_trainings_Click" Margin="0,5,0,0" Height="25"/>
-                <Button x:Name="cb_control" Content="Контроль" Click="cb_control_Click" Margin="0,5,0,0" Height="25"/>
+                <Button x:Name="cb_users" Content="Пользователи" FontSize="18" Click="cb_users_Click" Margin="0,20,0,0" Height="75"/>
+                <Button x:Name="cb_trainings" Content="Тренеровки" FontSize="18" Click="cb_trainings_Click" Margin="0,10,0,0" Height="75"/>
+                <Button x:Name="cb_control" Content="Контроль" FontSize="18" Click="cb_control_Click" Margin="0,10,0,0" Height="75"/>
+                <Button x:Name="cb_admin" Content="Настройки" FontSize="18" Margin="0,10,0,0" Height="75"/>
             </StackPanel>
         </Grid>
         <Frame x:Name="frame_content" Content="" Grid.Column="1" NavigationUIVisibility="Hidden" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>

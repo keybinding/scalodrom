@@ -32,10 +32,10 @@ namespace scalodrom.wrappers
         }
 
         public long id { get { return i_angle_series.id; } set { i_angle_series.id = value; Notify("id"); } }
-        public long id_training { get { return i_angle_series.id_training; } set { i_angle_series.id_training = value; Notify("id"); } }
-        public long order { get { return i_angle_series.order; } set { i_angle_series.order = value; Notify("id"); } }
-        public long value { get { return i_angle_series.value; } set { i_angle_series.value = value; Notify("id"); } }
-        public long duration { get { return i_angle_series.duration; } set { i_angle_series.duration = value; Notify("id"); } }
+        public long id_training { get { return i_angle_series.id_training; } set { i_angle_series.id_training = value; Notify("id_training"); } }
+        public long order { get { return i_angle_series.order; } set { i_angle_series.order = value; Notify("order"); } }
+        public long value { get { return i_angle_series.value; } set { i_angle_series.value = value; Notify("value"); } }
+        public long duration { get { return i_angle_series.duration; } set { i_angle_series.duration = value; Notify("duration"); } }
 
         public virtual training training { get { return i_angle_series.training; } set { i_angle_series.training = value; Notify("training"); } }
 

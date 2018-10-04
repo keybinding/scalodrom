@@ -23,7 +23,19 @@
                Дата рождения
             </TextBlock>
         </Label>
-        <Button x:Name="cb_save" HorizontalAlignment="Left" Margin="75,229,0,0" VerticalAlignment="Top" Width="35" ToolTip="Сохранить" Height="35" Click="cb_save_Click" IsEnabled="True">
+        <TextBox x:Name="tb_phone" HorizontalAlignment="Left" Height="23" Margin="76,203,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="+7(985)519-03-03"/>
+        <Label HorizontalAlignment="Left" Margin="1,200,0,0" VerticalAlignment="Top" Height="43" Width="70" HorizontalContentAlignment="Stretch">
+            <TextBlock TextWrapping="WrapWithOverflow" Width="61" TextAlignment="Right">
+               Телефон
+            </TextBlock>
+        </Label>
+        <TextBox x:Name="tb_email" HorizontalAlignment="Left" Height="23" Margin="76,248,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="test@gmail.com"/>
+        <Label HorizontalAlignment="Left" Margin="1,244,0,0" VerticalAlignment="Top" Height="43" Width="70" HorizontalContentAlignment="Stretch">
+            <TextBlock TextWrapping="WrapWithOverflow" Width="61" TextAlignment="Right">
+               E-Mail
+            </TextBlock>
+        </Label>
+        <Button x:Name="cb_save" HorizontalAlignment="Left" Margin="75,300,0,0" VerticalAlignment="Top" Width="35" ToolTip="Сохранить" Height="35" Click="cb_save_Click" IsEnabled="True">
             <Image Source="images/save256.png"/>
         </Button>
         <Image x:Name="image" HorizontalAlignment="Left" Height="137" Margin="239,40,-125,0" VerticalAlignment="Top" Width="186" Source="images/no-image-prod.jpg"/>

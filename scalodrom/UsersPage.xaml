@@ -40,27 +40,30 @@
                         <RowDefinition Height="67*"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Name="addTraining" Margin="5">
+                    <Button Grid.Row="0" Name="btn_addUser" Margin="5">
                         <Image Source="images/folderNew.png"></Image>
                     </Button>
-                    <Label Content="Добавить" Grid.Row="1"/>
+                    <Label Content="Добавить" Grid.Row="1" HorizontalContentAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="67*"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <Label Content="Изменить" Grid.Row="1"/>
+                    <Button Grid.Row="0" Name="btn_takePicture" Margin="5" Click="btn_takePicture_Click">
+                        <Image Source="images/photo.png"></Image>
+                    </Button>
+                    <Label Content="Фото" Grid.Row="1" HorizontalContentAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="67*"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Name="delTraining" Margin="5" Click="delTraining_Click">
+                    <Button Grid.Row="0" Name="btn_delUser" Margin="5">
                         <Image Source="images/folderDel.png"></Image>
                     </Button>
-                    <Label Content="Удалить" Grid.Row="1"/>
+                    <Label Content="Удалить" HorizontalContentAlignment="Center" Grid.Row="1"/>
                 </Grid>
             </Grid>
         </Grid>

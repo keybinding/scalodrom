@@ -59,5 +59,15 @@ namespace scalodrom
         {
             traineeDataGrid.Items.Refresh();
         }
+
+        private void btn_takePicture_Click(object sender, RoutedEventArgs e)
+        {
+
+            trainee l_trainee = traineeDataGrid.SelectedItem as trainee;
+            if (l_trainee != null)
+            {
+
+            }
+        }
     }
 }

@@ -67,5 +67,10 @@ namespace scalodrom
         {
 
         }
+
+        private void tb_firstname_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

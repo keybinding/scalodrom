@@ -70,3 +70,102 @@ ALTER TABLE training
 ADD CONSTRAINT FK_training_id_login_modif FOREIGN KEY (id_login_modif)     
     REFERENCES login (ID)
 ;   
+
+
+INSERT INTO [dbo].[login]
+           ([login]
+           ,[password]
+           ,[approved])
+     VALUES
+           ('admin'
+           ,'12345'
+           ,1);
+		   
+INSERT INTO [dbo].[training]
+           ([modif_date]
+           ,[name]
+           ,[id_login_modif])
+     VALUES
+           ('2018-01-01'
+           ,'Равномерный подъем'
+           ,1);
+		   
+INSERT INTO [dbo].[tr_path]
+           ([num_path]
+           ,[order]
+           ,[id_training]
+           ,[duration]
+           ,[speed])
+     VALUES
+           (1
+           ,0
+           ,1
+           ,10
+           ,10);
+INSERT INTO [dbo].[tr_path]
+           ([num_path]
+           ,[order]
+           ,[id_training]
+           ,[duration]
+           ,[speed])
+     VALUES
+           (2
+           ,0
+           ,1
+           ,10
+           ,10);
+
+INSERT INTO [dbo].[tr_path]
+           ([num_path]
+           ,[order]
+           ,[id_training]
+           ,[duration]
+           ,[speed])
+     VALUES
+           (3
+           ,0
+           ,1
+           ,10
+           ,10);
+		   
+INSERT INTO [dbo].[grapple_series]
+           ([id_training]
+           ,[track_num]
+           ,[row_num]
+           ,[grapple_num])
+     VALUES
+           (1
+           ,1
+           ,1
+           ,2);
+INSERT INTO [dbo].[grapple_series]
+           ([id_training]
+           ,[track_num]
+           ,[row_num]
+           ,[grapple_num])
+     VALUES
+           (1
+           ,1
+           ,2
+           ,1);
+
+INSERT INTO [dbo].[grapple_series]
+           ([id_training]
+           ,[track_num]
+           ,[row_num]
+           ,[grapple_num])
+     VALUES
+           (1
+           ,1
+           ,3
+           ,1);
+INSERT INTO [dbo].[angle_series]
+           ([id_training]
+           ,[order]
+           ,[value]
+           ,[duration])
+     VALUES
+           (1
+           ,0
+           ,5
+           ,10);

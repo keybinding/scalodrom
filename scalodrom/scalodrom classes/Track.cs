@@ -9,7 +9,10 @@ namespace scalodrom.scalodrom_classes
 {
     public class Track
     {
-        public int index { get; set; }
+        public int index {
+            get;
+            set;
+        }
         public ObservableCollection<TrackRow> rows { get { return _rows; } set { _rows = value; } }
         private ObservableCollection<TrackRow> _rows;
 

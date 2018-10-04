@@ -12,7 +12,7 @@ namespace scalodrom.scalodrom_classes
         private ObservableCollection<TrackRowToggle> _toggles;
         public ObservableCollection<TrackRowToggle> toggles { get { return _toggles; } set { _toggles = value; } }
 
-        public int index { get { return _index; } private set { _index = value; Notify("index"); } }
+        public int index { get { return _index; } set { _index = value; Notify("index"); } }
 
         public Track track
         {
