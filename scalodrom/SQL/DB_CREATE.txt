@@ -1,0 +1,72 @@
+
+CREATE TABLE angle_series ( id bigint PRIMARY KEY identity,
+ id_training bigint NOT NULL,
+ [order] bigint NOT NULL,
+ value bigint NOT NULL,
+ duration bigint NOT NULL );
+
+CREATE TABLE "login" ( 
+Id INTEGER NOT NULL PRIMARY KEY IDENTITY, 
+login NVARCHAR(20) NOT NULL UNIQUE, 
+password NVARCHAR(MAX) NOT NULL DEFAULT '12345', 
+approved INTEGER NOT NULL DEFAULT 1 );
+
+CREATE TABLE "trainee" ( 
+id INTEGER NOT NULL PRIMARY KEY IDENTITY, 
+firstname NVARCHAR(MAX) NOT NULL CHECK(LEN ( firstname ) > 0),
+middlename NVARCHAR(MAX) NOT NULL CHECK(LEN ( middlename ) > 0), 
+lastname NVARCHAR(MAX) NOT NULL CHECK(LEN ( lastname ) > 0), 
+birthdate NVARCHAR(MAX) NOT NULL, 
+create_date NVARCHAR(MAX) NOT NULL, 
+id_user_create INTEGER NOT NULL,
+id_user_modified INTEGER,
+modified_date NVARCHAR(MAX),
+fullname NVARCHAR(MAX) NOT NULL );
+
+CREATE TABLE "training" ( id INTEGER PRIMARY KEY IDENTITY,
+ modif_date NVARCHAR(32) NOT NULL UNIQUE,
+ name NVARCHAR(32) NOT NULL UNIQUE,
+ id_login_modif INTEGER NOT NULL);
+ 
+ CREATE TABLE "tr_path" ( id INTEGER PRIMARY KEY identity,
+ num_path INTEGER NOT NULL,
+ [order] INTEGER NOT NULL,
+ id_training INTEGER NOT NULL,
+ duration INTEGER NOT NULL CHECK(duration > 9),
+ speed INTEGER NOT NULL );
+ 
+ CREATE TABLE grapple_series ( id INTEGER PRIMARY KEY IDENTITY,
+ id_training INTEGER NOT NULL,
+ track_num INTEGER NOT NULL,
+ row_num INTEGER NOT NULL,
+ grapple_num INTEGER NOT NULL);
+ 
+ ALTER TABLE trainee     
+ADD CONSTRAINT FK_id_user_modified_TRAINEE FOREIGN KEY (id_user_modified)     
+    REFERENCES login (ID)
+;    
+
+ALTER TABLE trainee     
+ADD CONSTRAINT FK_id_user_create_TRAINEE FOREIGN KEY (id_user_create)     
+    REFERENCES login (ID)
+;
+
+ALTER TABLE angle_series     
+ADD CONSTRAINT FK_angle_series_training_TRAINEE FOREIGN KEY (id_training)     
+    REFERENCES training (ID)
+;   
+
+ALTER TABLE grapple_series     
+ADD CONSTRAINT FK_grapple_series_training_TRAINEE FOREIGN KEY (id_training)     
+    REFERENCES training (ID)
+;   
+
+ALTER TABLE tr_path     
+ADD CONSTRAINT FK_tr_path_training_TRAINEE FOREIGN KEY (id_training)     
+    REFERENCES training (ID)
+;   
+
+ALTER TABLE training     
+ADD CONSTRAINT FK_training_id_login_modif FOREIGN KEY (id_login_modif)     
+    REFERENCES login (ID)
+;   

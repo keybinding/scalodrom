@@ -40,6 +40,9 @@
                         <RowDefinition Height="67*"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Name="addTraining" Margin="5">
+                        <Image Source="images/folderNew.png"></Image>
+                    </Button>
                     <Label Content="Добавить" Grid.Row="1"/>
                 </Grid>
                 <Grid Grid.Column="1">
@@ -54,6 +57,9 @@
                         <RowDefinition Height="67*"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Name="delTraining" Margin="5" Click="delTraining_Click">
+                        <Image Source="images/folderDel.png"></Image>
+                    </Button>
                     <Label Content="Удалить" Grid.Row="1"/>
                 </Grid>
             </Grid>
