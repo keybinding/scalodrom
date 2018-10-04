@@ -13,10 +13,10 @@ namespace scalodrom
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class project_dbEntities11 : DbContext
+    public partial class scalodromEntities : DbContext
     {
-        public project_dbEntities11()
-            : base("name=project_dbEntities1")
+        public scalodromEntities()
+            : base("name=scalodromEntities")
         {
         }
     
@@ -25,11 +25,11 @@ namespace scalodrom
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<login> login { get; set; }
-        public virtual DbSet<trainee> trainee { get; set; }
-        public virtual DbSet<tr_path> tr_path { get; set; }
-        public virtual DbSet<training> training { get; set; }
         public virtual DbSet<angle_series> angle_series { get; set; }
         public virtual DbSet<grapple_series> grapple_series { get; set; }
+        public virtual DbSet<login> login { get; set; }
+        public virtual DbSet<tr_path> tr_path { get; set; }
+        public virtual DbSet<trainee> trainee { get; set; }
+        public virtual DbSet<training> training { get; set; }
     }
 }

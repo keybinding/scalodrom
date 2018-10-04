@@ -12,14 +12,9 @@ namespace scalodrom
     using System;
     using System.Collections.Generic;
     
-    public partial class grapple_series
+    public partial class testtbl
     {
         public long id { get; set; }
-        public long id_training { get; set; }
-        public long track_num { get; set; }
-        public long row_num { get; set; }
-        public long grapple_num { get; set; }
-    
-        public virtual training training { get; set; }
+        public string msg { get; set; }
     }
 }

@@ -1,0 +1,460 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище scalodromModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="angle_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id_training" Type="int" Nullable="false" />
+          <Property Name="order" Type="int" Nullable="false" />
+          <Property Name="value" Type="int" Nullable="false" />
+          <Property Name="duration" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="grapple_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_training" Type="int" Nullable="false" />
+          <Property Name="track_num" Type="int" Nullable="false" />
+          <Property Name="row_num" Type="int" Nullable="false" />
+          <Property Name="grapple_num" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="approved" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tr_path">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="num_path" Type="int" Nullable="false" />
+          <Property Name="order" Type="int" Nullable="false" />
+          <Property Name="id_training" Type="int" Nullable="false" />
+          <Property Name="duration" Type="int" Nullable="false" />
+          <Property Name="speed" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="trainee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="middlename" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="lastname" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="birthdate" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="create_date" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="id_user_create" Type="int" Nullable="false" />
+          <Property Name="id_user_modified" Type="int" />
+          <Property Name="modified_date" Type="nvarchar(max)" />
+          <Property Name="fullname" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="training">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="modif_date" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="id_login_modif" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_angle_series_training">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="angle_series" Type="Self.angle_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="angle_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_grapple_series_training">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="grapple_series" Type="Self.grapple_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="grapple_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_id_user_create_TRAINEE">
+          <End Role="login" Type="Self.login" Multiplicity="1" />
+          <End Role="trainee" Type="Self.trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_create" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_id_user_create_training">
+          <End Role="login" Type="Self.login" Multiplicity="1" />
+          <End Role="training" Type="Self.training" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="training">
+              <PropertyRef Name="id_login_modif" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_id_user_modified_TRAINEE">
+          <End Role="login" Type="Self.login" Multiplicity="0..1" />
+          <End Role="trainee" Type="Self.trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_modified" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tr_path_training">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="tr_path" Type="Self.tr_path" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tr_path">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище scalodromModelContainer">
+          <EntitySet Name="angle_series" EntityType="Self.angle_series" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="grapple_series" EntityType="Self.grapple_series" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="login" EntityType="Self.login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tr_path" EntityType="Self.tr_path" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="trainee" EntityType="Self.trainee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="training" EntityType="Self.training" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_angle_series_training" Association="Self.FK_angle_series_training">
+            <End Role="training" EntitySet="training" />
+            <End Role="angle_series" EntitySet="angle_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK_grapple_series_training" Association="Self.FK_grapple_series_training">
+            <End Role="training" EntitySet="training" />
+            <End Role="grapple_series" EntitySet="grapple_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK_id_user_create_TRAINEE" Association="Self.FK_id_user_create_TRAINEE">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_id_user_create_training" Association="Self.FK_id_user_create_training">
+            <End Role="login" EntitySet="login" />
+            <End Role="training" EntitySet="training" />
+          </AssociationSet>
+          <AssociationSet Name="FK_id_user_modified_TRAINEE" Association="Self.FK_id_user_modified_TRAINEE">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tr_path_training" Association="Self.FK_tr_path_training">
+            <End Role="training" EntitySet="training" />
+            <End Role="tr_path" EntitySet="tr_path" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="scalodromModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="angle_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id_training" Type="Int32" Nullable="false" />
+          <Property Name="order" Type="Int32" Nullable="false" />
+          <Property Name="value" Type="Int32" Nullable="false" />
+          <Property Name="duration" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="Self.FK_angle_series_training" FromRole="angle_series" ToRole="training" />
+        </EntityType>
+        <EntityType Name="grapple_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_training" Type="Int32" Nullable="false" />
+          <Property Name="track_num" Type="Int32" Nullable="false" />
+          <Property Name="row_num" Type="Int32" Nullable="false" />
+          <Property Name="grapple_num" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="Self.FK_grapple_series_training" FromRole="grapple_series" ToRole="training" />
+        </EntityType>
+        <EntityType Name="login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="approved" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="trainee" Relationship="Self.FK_id_user_create_TRAINEE" FromRole="login" ToRole="trainee" />
+          <NavigationProperty Name="training" Relationship="Self.FK_id_user_create_training" FromRole="login" ToRole="training" />
+          <NavigationProperty Name="trainee1" Relationship="Self.FK_id_user_modified_TRAINEE" FromRole="login" ToRole="trainee" />
+        </EntityType>
+        <EntityType Name="tr_path">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="num_path" Type="Int32" Nullable="false" />
+          <Property Name="order" Type="Int32" Nullable="false" />
+          <Property Name="id_training" Type="Int32" Nullable="false" />
+          <Property Name="duration" Type="Int32" Nullable="false" />
+          <Property Name="speed" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="Self.FK_tr_path_training" FromRole="tr_path" ToRole="training" />
+        </EntityType>
+        <EntityType Name="trainee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="middlename" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="birthdate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="create_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="id_user_create" Type="Int32" Nullable="false" />
+          <Property Name="id_user_modified" Type="Int32" />
+          <Property Name="modified_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fullname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="login" Relationship="Self.FK_id_user_create_TRAINEE" FromRole="trainee" ToRole="login" />
+          <NavigationProperty Name="login1" Relationship="Self.FK_id_user_modified_TRAINEE" FromRole="trainee" ToRole="login" />
+        </EntityType>
+        <EntityType Name="training">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="modif_date" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="id_login_modif" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="angle_series" Relationship="Self.FK_angle_series_training" FromRole="training" ToRole="angle_series" />
+          <NavigationProperty Name="grapple_series" Relationship="Self.FK_grapple_series_training" FromRole="training" ToRole="grapple_series" />
+          <NavigationProperty Name="login" Relationship="Self.FK_id_user_create_training" FromRole="training" ToRole="login" />
+          <NavigationProperty Name="tr_path" Relationship="Self.FK_tr_path_training" FromRole="training" ToRole="tr_path" />
+        </EntityType>
+        <Association Name="FK_angle_series_training">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="angle_series" Type="Self.angle_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="angle_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_grapple_series_training">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="grapple_series" Type="Self.grapple_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="grapple_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_id_user_create_TRAINEE">
+          <End Role="login" Type="Self.login" Multiplicity="1" />
+          <End Role="trainee" Type="Self.trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_create" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_id_user_create_training">
+          <End Role="login" Type="Self.login" Multiplicity="1" />
+          <End Role="training" Type="Self.training" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="training">
+              <PropertyRef Name="id_login_modif" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_id_user_modified_TRAINEE">
+          <End Role="login" Type="Self.login" Multiplicity="0..1" />
+          <End Role="trainee" Type="Self.trainee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="trainee">
+              <PropertyRef Name="id_user_modified" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tr_path_training">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="tr_path" Type="Self.tr_path" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tr_path">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="scalodromEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="angle_series" EntityType="Self.angle_series" />
+          <EntitySet Name="grapple_series" EntityType="Self.grapple_series" />
+          <EntitySet Name="login" EntityType="Self.login" />
+          <EntitySet Name="tr_path" EntityType="Self.tr_path" />
+          <EntitySet Name="trainee" EntityType="Self.trainee" />
+          <EntitySet Name="training" EntityType="Self.training" />
+          <AssociationSet Name="FK_angle_series_training" Association="Self.FK_angle_series_training">
+            <End Role="training" EntitySet="training" />
+            <End Role="angle_series" EntitySet="angle_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK_grapple_series_training" Association="Self.FK_grapple_series_training">
+            <End Role="training" EntitySet="training" />
+            <End Role="grapple_series" EntitySet="grapple_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK_id_user_create_TRAINEE" Association="Self.FK_id_user_create_TRAINEE">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_id_user_create_training" Association="Self.FK_id_user_create_training">
+            <End Role="login" EntitySet="login" />
+            <End Role="training" EntitySet="training" />
+          </AssociationSet>
+          <AssociationSet Name="FK_id_user_modified_TRAINEE" Association="Self.FK_id_user_modified_TRAINEE">
+            <End Role="login" EntitySet="login" />
+            <End Role="trainee" EntitySet="trainee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tr_path_training" Association="Self.FK_tr_path_training">
+            <End Role="training" EntitySet="training" />
+            <End Role="tr_path" EntitySet="tr_path" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище scalodromModelContainer" CdmEntityContainer="scalodromEntities">
+          <EntitySetMapping Name="angle_series">
+            <EntityTypeMapping TypeName="scalodromModel.angle_series">
+              <MappingFragment StoreEntitySet="angle_series">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
+                <ScalarProperty Name="order" ColumnName="order" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="grapple_series">
+            <EntityTypeMapping TypeName="scalodromModel.grapple_series">
+              <MappingFragment StoreEntitySet="grapple_series">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
+                <ScalarProperty Name="track_num" ColumnName="track_num" />
+                <ScalarProperty Name="row_num" ColumnName="row_num" />
+                <ScalarProperty Name="grapple_num" ColumnName="grapple_num" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="login">
+            <EntityTypeMapping TypeName="scalodromModel.login">
+              <MappingFragment StoreEntitySet="login">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="login1" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="approved" ColumnName="approved" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tr_path">
+            <EntityTypeMapping TypeName="scalodromModel.tr_path">
+              <MappingFragment StoreEntitySet="tr_path">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="num_path" ColumnName="num_path" />
+                <ScalarProperty Name="order" ColumnName="order" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="speed" ColumnName="speed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trainee">
+            <EntityTypeMapping TypeName="scalodromModel.trainee">
+              <MappingFragment StoreEntitySet="trainee">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="middlename" ColumnName="middlename" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="birthdate" ColumnName="birthdate" />
+                <ScalarProperty Name="create_date" ColumnName="create_date" />
+                <ScalarProperty Name="id_user_create" ColumnName="id_user_create" />
+                <ScalarProperty Name="id_user_modified" ColumnName="id_user_modified" />
+                <ScalarProperty Name="modified_date" ColumnName="modified_date" />
+                <ScalarProperty Name="fullname" ColumnName="fullname" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="training">
+            <EntityTypeMapping TypeName="scalodromModel.training">
+              <MappingFragment StoreEntitySet="training">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="modif_date" ColumnName="modif_date" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id_login_modif" ColumnName="id_login_modif" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
