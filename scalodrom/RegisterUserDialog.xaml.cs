@@ -28,7 +28,7 @@ namespace scalodrom
         {
             using (var db = new project_dbEntities1())
             {
-                login l_new_login = new login() { login1 = inputLogin, password = (inputPassword == "" ? "12345" : inputPassword) };
+                login l_new_login = new login() { login1 = inputLogin, password = (inputPassword == "" ? "12345" : inputPassword), approved = 1 };
                 try
                 {
                     db.login.Add(l_new_login);

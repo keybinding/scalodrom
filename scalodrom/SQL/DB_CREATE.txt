@@ -6,40 +6,40 @@ CREATE TABLE angle_series ( id bigint PRIMARY KEY identity,
  duration bigint NOT NULL );
 
 CREATE TABLE "login" ( 
-Id INTEGER NOT NULL PRIMARY KEY IDENTITY, 
+Id bigint NOT NULL PRIMARY KEY IDENTITY, 
 login NVARCHAR(20) NOT NULL UNIQUE, 
 password NVARCHAR(MAX) NOT NULL DEFAULT '12345', 
-approved INTEGER NOT NULL DEFAULT 1 );
+approved bigint NOT NULL DEFAULT 1 );
 
 CREATE TABLE "trainee" ( 
-id INTEGER NOT NULL PRIMARY KEY IDENTITY, 
+id bigint NOT NULL PRIMARY KEY IDENTITY, 
 firstname NVARCHAR(MAX) NOT NULL CHECK(LEN ( firstname ) > 0),
 middlename NVARCHAR(MAX) NOT NULL CHECK(LEN ( middlename ) > 0), 
 lastname NVARCHAR(MAX) NOT NULL CHECK(LEN ( lastname ) > 0), 
 birthdate NVARCHAR(MAX) NOT NULL, 
 create_date NVARCHAR(MAX) NOT NULL, 
-id_user_create INTEGER NOT NULL,
-id_user_modified INTEGER,
+id_user_create bigint NOT NULL,
+id_user_modified bigint,
 modified_date NVARCHAR(MAX),
 fullname NVARCHAR(MAX) NOT NULL );
 
-CREATE TABLE "training" ( id INTEGER PRIMARY KEY IDENTITY,
+CREATE TABLE "training" ( id bigint PRIMARY KEY IDENTITY,
  modif_date NVARCHAR(32) NOT NULL UNIQUE,
  name NVARCHAR(32) NOT NULL UNIQUE,
- id_login_modif INTEGER NOT NULL);
+ id_login_modif bigint NOT NULL);
  
- CREATE TABLE "tr_path" ( id INTEGER PRIMARY KEY identity,
- num_path INTEGER NOT NULL,
- [order] INTEGER NOT NULL,
- id_training INTEGER NOT NULL,
- duration INTEGER NOT NULL CHECK(duration > 9),
- speed INTEGER NOT NULL );
+ CREATE TABLE "tr_path" ( id bigint PRIMARY KEY identity,
+ num_path bigint NOT NULL,
+ [order] bigint NOT NULL,
+ id_training bigint NOT NULL,
+ duration bigint NOT NULL CHECK(duration > 9),
+ speed bigint NOT NULL );
  
- CREATE TABLE grapple_series ( id INTEGER PRIMARY KEY IDENTITY,
- id_training INTEGER NOT NULL,
- track_num INTEGER NOT NULL,
- row_num INTEGER NOT NULL,
- grapple_num INTEGER NOT NULL);
+ CREATE TABLE grapple_series ( id bigint PRIMARY KEY IDENTITY,
+ id_training bigint NOT NULL,
+ track_num bigint NOT NULL,
+ row_num bigint NOT NULL,
+ grapple_num bigint NOT NULL);
  
  ALTER TABLE trainee     
 ADD CONSTRAINT FK_id_user_modified_TRAINEE FOREIGN KEY (id_user_modified)     
