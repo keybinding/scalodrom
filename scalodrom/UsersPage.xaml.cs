@@ -21,7 +21,7 @@ namespace scalodrom
     /// </summary>
     public partial class UsersPage : Page
     {
-        project_dbEntities1 db_context = new project_dbEntities1();
+        scalodromEntities3 db_context = new scalodromEntities3();
         public UsersPage()
         {
             InitializeComponent();

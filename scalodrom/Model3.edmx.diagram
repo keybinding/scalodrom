@@ -6,18 +6,22 @@
     <edmx:Diagrams>
       <Diagram DiagramId="7ad0029595834a908b707f53a28c43fe" Name="Diagram1">
         <EntityTypeShape EntityType="scalodromModel1.angle_series" Width="1.5" PointX="5.25" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="scalodromModel1.grapple_series" Width="1.5" PointX="5.25" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="scalodromModel1.grapple_series" Width="1.5" PointX="6.125" PointY="8.5" IsExpanded="true" />
         <EntityTypeShape EntityType="scalodromModel1.login" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
         <EntityTypeShape EntityType="scalodromModel1.tr_path" Width="1.5" PointX="5.25" PointY="11.375" IsExpanded="true" />
         <EntityTypeShape EntityType="scalodromModel1.trainee" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="scalodromModel1.training" Width="1.5" PointX="3" PointY="8.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="scalodromModel1.testtbl" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="scalodromModel1.FK_angle_series_training_TRAINEE" ManuallyRouted="false" />
         <AssociationConnector Association="scalodromModel1.FK_grapple_series_training_TRAINEE" ManuallyRouted="false" />
         <AssociationConnector Association="scalodromModel1.FK_id_user_create_TRAINEE" ManuallyRouted="false" />
         <AssociationConnector Association="scalodromModel1.FK_id_user_modified_TRAINEE" ManuallyRouted="false" />
         <AssociationConnector Association="scalodromModel1.FK_training_id_login_modif" ManuallyRouted="false" />
         <AssociationConnector Association="scalodromModel1.FK_tr_path_training_TRAINEE" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="scalodromModel1.sysdiagrams" Width="1.5" PointX="7.375" PointY="3.75" />
+        <EntityTypeShape EntityType="scalodromModel1.light_frequency_series" Width="1.5" PointX="5.25" PointY="18.25" />
+        <EntityTypeShape EntityType="scalodromModel1.light_intensity_series" Width="1.5" PointX="5.25" PointY="15.25" />
+        <AssociationConnector Association="scalodromModel1.FK__light_fre__id_tr__32AB8735" />
+        <AssociationConnector Association="scalodromModel1.FK__light_int__id_tr__282DF8C2" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

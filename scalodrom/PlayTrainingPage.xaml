@@ -84,7 +84,7 @@
             </Button>
             <ProgressBar Name="PrgBar" Height="50" Width="800" Margin="15,0,0,0" Value="{Binding CurPrgBarValue}" Maximum="{Binding MaxPrgBarValue}" Minimum="0"></ProgressBar>
             <TextBox Name="tb_countDown" IsReadOnly="True" Height="30" Text="{Binding CurrentTime}" FontSize="20" Margin="15,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>
-            <!--<TextBox Name="tb_dbg" IsReadOnly="True" Height="30" Text="{Binding Dbg}" FontSize="20" Margin="50,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>-->
+            <!--<TextBox Name="tb_dbg" IsReadOnly="True" Height="30" Width="600" Text="{Binding Dbg}" FontSize="20" Margin="50,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>-->
         </StackPanel>
     </Grid>
 </Page>

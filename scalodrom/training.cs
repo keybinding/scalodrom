@@ -20,6 +20,8 @@ namespace scalodrom
             this.angle_series = new HashSet<angle_series>();
             this.grapple_series = new HashSet<grapple_series>();
             this.tr_path = new HashSet<tr_path>();
+            this.light_frequency_series = new HashSet<light_frequency_series>();
+            this.light_intensity_series = new HashSet<light_intensity_series>();
         }
     
         public long id { get; set; }
@@ -34,5 +36,9 @@ namespace scalodrom
         public virtual login login { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tr_path> tr_path { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<light_frequency_series> light_frequency_series { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<light_intensity_series> light_intensity_series { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace scalodrom
 
         public void RegisterNewUser()
         {
-            using (var db = new project_dbEntities1())
+            using (var db = new scalodromEntities3())
             {
                 login l_new_login = new login() { login1 = inputLogin, password = (inputPassword == "" ? "12345" : inputPassword), approved = 1 };
                 try

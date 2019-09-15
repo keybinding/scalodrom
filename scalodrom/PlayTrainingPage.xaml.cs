@@ -17,6 +17,8 @@ using System.IO.Ports;
 using NModbus.Serial;
 using NModbus;
 using System.ComponentModel;
+using System.IO;
+using System.Net.Sockets;
 
 namespace scalodrom
 {
@@ -40,6 +42,22 @@ namespace scalodrom
         private string _dbg;
         Task<bool> finished;
         List<trPathNodeModel> series1 = new List<trPathNodeModel>();
+        trPathNodeModel _currentPoint1;
+        private int _currentIndex1;
+        List<trPathNodeModel> series2 = new List<trPathNodeModel>();
+        trPathNodeModel _currentPoint2;
+        private int _currentIndex2;
+        List<trPathNodeModel> series3 = new List<trPathNodeModel>();
+        trPathNodeModel _currentPoint3;
+        private int _currentIndex3;
+
+        List<trPathNodeModel> angles = new List<trPathNodeModel>();
+        trPathNodeModel _currentAngle;
+        private int _currentAngleIndex;
+
+        bool switchAngle = false;
+
+
         BackgroundWorker _bw;
 
         public const string c_playImage = "images/play_green.png";
@@ -116,23 +134,50 @@ namespace scalodrom
                     CurrentPlayButtonImage = c_playImage;
                     if (finished == null || finished.Status != TaskStatus.Running)
                     {
-                        series1.Clear();
+                        series1.Clear(); series2.Clear(); series3.Clear();angles.Clear();
                         foreach (var v in initialModel.seriesCollection1[0].ActualValues)
                         {
                             series1.Add(new trPathNodeModel() { Speed = (v as trPathNodeModel).Speed, Start = (v as trPathNodeModel).Start });
                         }
-                        _currentIndex = 0;
-                        _currentPoint = series1[0];
-                        MaxTime = (int) series1[series1.Count - 1].Start;
+                        foreach (var v in initialModel.seriesCollection2[0].ActualValues)
+                        {
+                            series2.Add(new trPathNodeModel() { Speed = (v as trPathNodeModel).Speed, Start = (v as trPathNodeModel).Start });
+                        }
+                        foreach (var v in initialModel.seriesCollection3[0].ActualValues)
+                        {
+                            series3.Add(new trPathNodeModel() { Speed = (v as trPathNodeModel).Speed, Start = (v as trPathNodeModel).Start });
+                        }
+                        foreach (var v in initialModel.seriesCollectionAngles[0].ActualValues)
+                        {
+                            angles.Add(new trPathNodeModel() { Speed = (v as trPathNodeModel).Speed, Start = (v as trPathNodeModel).Start });
+                        }
+                        _currentIndex1 = 0; _currentIndex2 = 0; _currentIndex3 = 0; _currentAngleIndex = 0;
+                        _currentPoint1 = series1[0]; _currentPoint2 = series2[0]; _currentPoint3 = series3[0]; _currentAngle = angles[0];
+
+                        MaxTime = (new int[3]{(int) series1[series1.Count - 1].Start,
+                                                   (int) series2[series2.Count - 1].Start,
+                                                   (int) series3[series3.Count - 1].Start}).ToList().Max();
+                        
                         finished = Play();
                         finished.Start();
                         finished.GetAwaiter().OnCompleted(() => {
-                            _currentIndex = 0;
-                            series1.Clear();
+                            _currentIndex1 = 0; _currentIndex2 = 0; _currentIndex3 = 0; _currentAngleIndex = 0;
+                            series1.Clear(); series2.Clear(); series3.Clear(); angles.Clear();
                             CurrentTime = 0;
                             CurPrgBarValue = 0;
                             CurrentPlayButtonImage = c_playImage;
                             _isPlaying = false;
+                            _justInit = false;
+                            try
+                            {
+                                SendMusicCmd("-s");
+                            }
+                            catch (Exception)
+                            {
+
+                                //throw;
+                            }
+                            
                         });
                     }
                 }
@@ -140,6 +185,7 @@ namespace scalodrom
             }
         }
 
+        bool _firstTime = true;
         public Task<bool> Play()
         {
             return new Task<bool>(() =>
@@ -157,14 +203,66 @@ namespace scalodrom
                     double secondsPassed = (double)timeElapsed / (double)l_hrt.Frequency;
                     if (((int)secondsPassed) > CurrentTime)
                     {
+                        if (_firstTime) { _justInit = true; _firstTime = false; }
                         CurrentTime = ((int)secondsPassed);
-                        if (CurrentTime > (series1[_currentIndex + 1] as trPathNodeModel).Start)
+                        
+                        if (CurrentTime > (series1[_currentIndex1 + 1] as trPathNodeModel).Start)
                         {
-                            _currentIndex += 1;
-                            if (_currentIndex < series1.Count - 1)
+                            _currentIndex1 += 1;
+                            if (_currentIndex1 < series1.Count - 1)
                             {
-                                _currentPoint = (series1[_currentIndex] as trPathNodeModel);
+                                _currentPoint1 = (series1[_currentIndex1] as trPathNodeModel);
                                 //switchAngle = true;
+                            }
+                            else
+                            {
+                                _currentIndex1 = series1.Count - 2;
+                                _currentPoint1 = null;
+                            }
+                        }                         
+
+                        if (CurrentTime > (series2[_currentIndex2 + 1] as trPathNodeModel).Start)
+                        {
+                            _currentIndex2 += 1;
+                            if (_currentIndex2 < series2.Count - 1)
+                            {
+                                _currentPoint2 = (series2[_currentIndex2] as trPathNodeModel);
+                                //switchAngle = true;
+                            }
+                            else
+                            {
+                                _currentIndex2 = series2.Count - 2;
+                                _currentPoint2 = null;
+                            }
+                        }
+
+                        if (CurrentTime > (series3[_currentIndex3 + 1] as trPathNodeModel).Start)
+                        {
+                            _currentIndex3 += 1;
+                            if (_currentIndex3 < series3.Count - 1)
+                            {
+                                _currentPoint3 = (series3[_currentIndex3] as trPathNodeModel);
+                                //switchAngle = true;
+                            }
+                            else
+                            {
+                                _currentIndex3 = series3.Count - 2;
+                                _currentPoint3 = null;
+                            }
+                        }
+
+                        if (CurrentTime > (angles[_currentAngleIndex + 1] as trPathNodeModel).Start)
+                        {
+                            _currentAngleIndex += 1;
+                            if (_currentAngleIndex < angles.Count - 1)
+                            {
+                                _currentAngle = (angles[_currentAngleIndex] as trPathNodeModel);
+                                switchAngle = true;
+                            }
+                            else
+                            {
+                                _currentAngleIndex = angles.Count - 2;
+                                switchAngle = false;
                             }
                         }
                     }
@@ -204,12 +302,11 @@ namespace scalodrom
                 Notify("Dbg");
             }
         }
-
-        trPathNodeModel _currentPoint;
-        private int _currentIndex;
+        
+        
         private SerialPort _slavePort;
 
-        public PlayTrainingModel(training a_tr, project_dbEntities1 a_db_context)
+        public PlayTrainingModel(training a_tr, scalodromEntities3 a_db_context)
         {
             initialModel = new TrainingViewModel(a_tr, a_db_context);
             CurrentPlayButtonImage = c_playImage;
@@ -224,9 +321,11 @@ namespace scalodrom
                 _bw.RunWorkerAsync();
             }
         }
+        
 
         private void Bw_DoWork(object sender, DoWorkEventArgs e)
         {
+            OpenDMX.start();
             ListenPort();
         }
 
@@ -245,15 +344,56 @@ namespace scalodrom
 
             if (CurrentTime == 0)
             {
-                _currentPoint = (initialModel.seriesCollection1[0].ActualValues[0] as trPathNodeModel);
-                _currentIndex = 0;
+                _currentPoint1 = (initialModel.seriesCollection1[0].ActualValues[0] as trPathNodeModel);
+                _currentPoint2 = (initialModel.seriesCollection2[0].ActualValues[0] as trPathNodeModel);
+                _currentPoint3 = (initialModel.seriesCollection3[0].ActualValues[0] as trPathNodeModel);
+                _currentAngle = (initialModel.seriesCollectionAngles[0].ActualValues[0] as trPathNodeModel);
+                _currentIndex1 = 0; _currentIndex2 = 0; _currentIndex3 = 0; _currentAngleIndex = 0;
+                try
+                {
+                    SendMusicCmd("-c"); //clear
+                    SendMusicCmd("-a /home/pi/Music"); //fill playlist from folder
+                    SendMusicCmd("-p -t repeat, autonext"); //start paying
+                }
+                catch (Exception)
+                {
+
+                    
+                }
+                
             }
-            IsPlaying = !IsPlaying;
+            else
+            {
+                try
+                {
+                    SendMusicCmd("-G");
+                }
+                catch (Exception)
+                {
+
+                    //throw;
+                }
+                
+            }
+            IsPlaying = !IsPlaying;            
         }
 
+        public void SendMusicCmd(string a_cmd)
+        {
+            /*
+            TcpClient client = new TcpClient("169.254.7.0", 8876);            
+            NetworkStream ns = client.GetStream();
+            Byte[] msg = new Byte[256];
+            StreamWriter writer = new StreamWriter(ns, System.Text.Encoding.ASCII);
+            writer.WriteLine(a_cmd);
+            writer.Flush();
+            */
+        }
+
+        bool _justInit = false;
         public void ListenPort()
         {
-            _slavePort = new SerialPort("COM3");
+            _slavePort = new SerialPort("COM5");
             _slavePort.BaudRate = 115200;
             _slavePort.DataBits = 8;
             _slavePort.Parity = Parity.None;
@@ -267,79 +407,87 @@ namespace scalodrom
             IModbusSlave slave1 = factory.CreateSlave(4, dataStore); //5 - у тестового, 4 - scalodrom
             dataStore.CoilDiscretes.StorageOperationOccurred += (sender, args) =>
             {
-                ;
+                if(args.Operation == PointOperation.Write)
+                {
+                    //File.AppendAllLines("log.txt", new string[1] { $"CoilDiscretes: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
+                }
+                else
+                {
+                    
+                }
+                
+                //File.AppendAllLines("log.txt", new string[1] { $"CoilDiscretes: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
             };
             dataStore.CoilInputs.StorageOperationOccurred += (sender, args) =>
             {
                 if (args.Operation == PointOperation.Read)
                 {
+
                     //i = "c-i read addr = " + args.StartingAddress.ToString() + " cnt = " + args.Points.Length.ToString();
-                    if (false)//switchAngle)
+                    //dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true });
+                    if (switchAngle || _justInit)
                     {
-                        //dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true });
-                        //switchAngle = false;
+                        dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true });
+                        switchAngle = false;
+                        _justInit = false;
                     }
                     else
                     {
                         dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { false });
                     }
+
+                }
+                else
+                {
+                    //Dbg += $"Input registers: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}\r\n";
+                    //File.AppendAllLines("log.txt", new string[1] { $"CoilInputs: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
+
                 }
             };
             List<ushort> adr = new List<ushort>(); //5 addr - angle, 7 - flag
             dataStore.InputRegisters.StorageOperationOccurred += (sender, args) =>
             {
+                
                 if (args.Operation == PointOperation.Write)
                 {
                     //h = "yes"; //Console.WriteLine($"Input registers: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}");
                     //i = "yes";
+                    //Dbg += $"Input registers: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" ;
+                    //File.AppendAllLines("log.txt", new string[1] { $"InputRegisters: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
+                    
                 }
                 else
                 {
-                    //if (!adr.Contains(args.StartingAddress)) adr.Add(args.StartingAddress);
                     
-                    if (args.StartingAddress == 5)
+                    if (args.StartingAddress == 1)
                     {
-                        float f = 0.0f;
-                        if (_currentPoint != null) f = _currentPoint.Speed;
-                        int m = (int)f;
-                        byte[] b = BitConverter.GetBytes(m);
-                        ushort high = BitConverter.ToUInt16(b, 0);
-                        ushort low = BitConverter.ToUInt16(b, 2);
-                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low, high, low, high, low });
-                    }
-                    else if (args.StartingAddress == 1)
-                    {
+                        float curAngle = -15.0f;
+                        byte[] ab = BitConverter.GetBytes(curAngle);
+                        ushort high = BitConverter.ToUInt16(ab, 0);
+                        ushort low = BitConverter.ToUInt16(ab, 2);
+                        //dataStore.InputRegisters.WritePointsSilent(5, new ushort[] { high, low });
                         //172.16.15.65
-                        float f = 0.0f;
+                        float f1 = 0.0f; float f2 = 0.0f; float f3 = 0.0f;
                         if (IsPlaying)
                         {
-                            if (_currentPoint != null) f = _currentPoint.Speed;
-                            else f = 0.0f;
+                            if (_currentPoint1 != null) f1 = _currentPoint1.Speed;
+                            else f1 = 0.0f;
+                            if (_currentPoint2 != null) f2 = _currentPoint2.Speed;
+                            else f2 = 0.0f;
+                            if (_currentPoint3 != null) f3 = _currentPoint3.Speed;
+                            else f3 = 0.0f;
                         }
                         else
                         {
-                            f = 0.0f;
+                            f1 = 0.0f; f2 = 0.0f; f3 = 0.0f;
                         }
+                        
+                        byte[] b1 = BitConverter.GetBytes(f1); byte[] b2 = BitConverter.GetBytes(f2); byte[] b3 = BitConverter.GetBytes(f3);
+                        ushort high1 = BitConverter.ToUInt16(b1, 0); ushort high2 = BitConverter.ToUInt16(b2, 0); ushort high3 = BitConverter.ToUInt16(b3, 0);
+                        ushort low1 = BitConverter.ToUInt16(b1, 2); ushort low2 = BitConverter.ToUInt16(b2, 2); ushort low3 = BitConverter.ToUInt16(b3, 2);
+                        //_currentPoint1
 
-                        Dbg = f.ToString();
-                        byte[] b = BitConverter.GetBytes(f);
-                        ushort high = BitConverter.ToUInt16(b, 0);
-                        ushort low = BitConverter.ToUInt16(b, 2);
-                        //_currentPoint
-
-                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low, high, low, high, low });
-                    }
-                    else if (args.StartingAddress == 9)
-                    {
-                        //h = args.StartingAddress.ToString() + " " + args.Points.Length.ToString();
-                        Dbg += args.StartingAddress.ToString();
-                        Dbg += " cnt = " + args.Points.Length.ToString();
-                        float f = 0.0f;
-                        if (_currentPoint != null) f = _currentPoint.Speed;
-                        byte[] b = BitConverter.GetBytes(f);
-                        ushort high = BitConverter.ToUInt16(b, 0);
-                        ushort low = BitConverter.ToUInt16(b, 2);
-                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low });
+                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high3, low3, high1, low1, high2, low2});
                     }
                     else
                     {
@@ -351,16 +499,24 @@ namespace scalodrom
 
             dataStore.HoldingRegisters.StorageOperationOccurred += (sender, args) =>
             {
+                
                 //Console.WriteLine($"Holding registers: {args.Operation} starting at {args.StartingAddress}  {args.Points[0]}");
                 if (args.Operation == PointOperation.Write)
                 {
-
+                    //File.AppendAllLines("log.txt", new string[1] { $"HoldingRegisters: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
+                    float curAngle = -15.0f;
+                    byte[] ab = BitConverter.GetBytes(curAngle);
+                    ushort high = BitConverter.ToUInt16(ab, 0);
+                    ushort low = BitConverter.ToUInt16(ab, 2);
+                    dataStore.HoldingRegisters.WritePointsSilent(7, new ushort[] { high, low });
                 }
                 else
                 {
-                    //h = "zzzz";
-                    string dbg = "";
-                    //h = args.StartingAddress.ToString();
+                    float curAngle = -15.0f;
+                    byte[] ab = BitConverter.GetBytes(curAngle);
+                    ushort high = BitConverter.ToUInt16(ab, 0);
+                    ushort low = BitConverter.ToUInt16(ab, 2);
+                    dataStore.HoldingRegisters.WritePointsSilent(7, new ushort[] { high, low });
                 }
             };
             slaveNetwork.AddSlave(slave1);
@@ -377,8 +533,19 @@ namespace scalodrom
 
         public void Unload()
         {
+            try
+            {
+                SendMusicCmd("-s");
+            }
+            catch (Exception)
+            {
+
+                //throw;
+            }
+            
             if (_bw.IsBusy) _bw.CancelAsync();
             if (_slavePort.IsOpen) _slavePort.Close();
+
         }
 
     }
@@ -386,7 +553,7 @@ namespace scalodrom
     public partial class PlayTrainingPage : Page
     {
         PlayTrainingModel model = null;
-        public PlayTrainingPage(training a_tr, project_dbEntities1 a_db_context)
+        public PlayTrainingPage(training a_tr, scalodromEntities3 a_db_context)
         {
             InitializeComponent();
             model = new PlayTrainingModel(a_tr, a_db_context);

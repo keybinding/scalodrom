@@ -22,7 +22,7 @@ namespace scalodrom
     /// </summary>
     public partial class TrainingsPage : Page, System.ComponentModel.INotifyPropertyChanged
     {
-        project_dbEntities1 db_context = new project_dbEntities1();
+        scalodromEntities3 db_context = new scalodromEntities3();
         public const string c_plotsImage = "images/lines.png";
         public const string c_grapplesImage = "images/sun.png";
         private string _detailsImage;
@@ -142,6 +142,18 @@ namespace scalodrom
                 }
             }
         }
-        
+
+        private void strobos_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = (sender as Button);
+            System.Windows.Controls.Image img = (btn.Content as Image);
+            training l_training = trainingDataGrid.SelectedItem as training;
+            if (l_training != null)
+            {
+                ClimbPathView l_usrPage = new ClimbPathView(l_training, db_context);
+                viewFrame.Content = l_usrPage;
+            }
+        }
+
     }
 }

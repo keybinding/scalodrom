@@ -1,1 +1,59 @@
 C:\Users\rjews\Documents\Visual Studio 2015\Projects\scalodrom
+
+private void btnOff_Click(object sender, EventArgs e)
+        {
+            if (OpenDMX.status == FT_STATUS.FT_DEVICE_NOT_FOUND)
+                toolStripStatusLabel1.Text = "No device";
+            else
+                toolStripStatusLabel1.Text = "Device found";
+            OpenDMX.setDmxValue(1, 0);
+            OpenDMX.setDmxValue(2, 0);
+            OpenDMX.setDmxValue(3, 0);
+            OpenDMX.writeData();
+
+        }
+
+
+        Task t;
+        private async void btnAllOn_Click(object sender, EventArgs e)
+        {
+            if (OpenDMX.status == FT_STATUS.FT_DEVICE_NOT_FOUND)
+                toolStripStatusLabel1.Text = "No device";
+            else
+                toolStripStatusLabel1.Text = "Device found";
+            
+            t = Task.Factory.StartNew(() =>
+                {
+                    double i = 0.0;
+                    int r = 0;
+                    int m = 0;
+                    while (true)
+                    {
+                        r = (int)(((Math.Sin(i) + 1.0) / 2.0) * 255);
+                        m = m + 1;//(int)(((Math.Sin(i - Math.PI) + 1.0) / 2.0) * 255);
+                        //OpenDMX.setDmxValue(1, 255);
+                        OpenDMX.setDmxValue(1, Convert.ToByte(r));
+                        //OpenDMX.setDmxValue(1, Convert.ToByte(r));
+                        //OpenDMX.setDmxValue(2, 50);
+                        /*
+                        if (m % 1000 < 333)
+                        {
+                            OpenDMX.setDmxValue(1, 255);
+                        }
+                        else
+                        {
+                            OpenDMX.setDmxValue(1, 0);
+                        }
+                        */
+                        OpenDMX.writeData();
+                        //Thread.Sleep(1000);
+                        i+=0.1;
+                    }
+                }
+            );
+            await t;
+            
+            
+            
+
+        }

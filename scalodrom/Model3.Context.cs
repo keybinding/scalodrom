@@ -13,9 +13,9 @@ namespace scalodrom
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class project_dbEntities1 : DbContext
+    public partial class scalodromEntities3 : DbContext
     {
-        public project_dbEntities1()
+        public scalodromEntities3()
             : base("name=scalodromEntities3")
         {
         }
@@ -31,6 +31,8 @@ namespace scalodrom
         public virtual DbSet<tr_path> tr_path { get; set; }
         public virtual DbSet<trainee> trainee { get; set; }
         public virtual DbSet<training> training { get; set; }
-        public virtual DbSet<testtbl> testtbl { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<light_frequency_series> light_frequency_series { get; set; }
+        public virtual DbSet<light_intensity_series> light_intensity_series { get; set; }
     }
 }

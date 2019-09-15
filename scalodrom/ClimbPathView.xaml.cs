@@ -25,7 +25,7 @@ namespace scalodrom
     public class ClimbPathModel : PropertyChangedNotifier
     {
         training training = null;
-        project_dbEntities1 db_context = null;
+        scalodromEntities3 db_context = null;
         private ObservableCollection<Track> _tracks = null;
         ObservableCollection<grapple_series> _grapples;
         public ObservableCollection<Track> tracks
@@ -75,7 +75,7 @@ namespace scalodrom
             subscribeToggles();
         }
 
-        public ClimbPathModel(training a_tr, project_dbEntities1 a_db_context)
+        public ClimbPathModel(training a_tr, scalodromEntities3 a_db_context)
         {
             training = a_tr;
             db_context = a_db_context;
@@ -141,7 +141,7 @@ namespace scalodrom
             DataContext = _model;
         }
 
-        public ClimbPathView(training a_tr, project_dbEntities1 a_db_context)
+        public ClimbPathView(training a_tr, scalodromEntities3 a_db_context)
         {
             _model = new ClimbPathModel(a_tr, a_db_context);
             _grapples = new ObservableCollection<grapple_series>((from grapplesList in a_db_context.grapple_series where grapplesList.id_training == a_tr.id select grapplesList));

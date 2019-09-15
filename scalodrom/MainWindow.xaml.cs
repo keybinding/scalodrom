@@ -63,7 +63,7 @@ namespace scalodrom
         public login Login()
         {
             IList<login> logins = new List<login>();
-            using (var db = new project_dbEntities1())
+            using (var db = new scalodromEntities3())
             {
                 logins = (from loginlist in db.login where loginlist.login1 == loginEntered select loginlist).ToList();
             }

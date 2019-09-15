@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище scalodromModel1" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище scalodromModel1" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="angle_series">
           <Key>
             <PropertyRef Name="id" />
@@ -25,6 +25,26 @@
           <Property Name="row_num" Type="bigint" Nullable="false" />
           <Property Name="grapple_num" Type="bigint" Nullable="false" />
         </EntityType>
+        <EntityType Name="light_frequency_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="None" Nullable="false" />
+          <Property Name="id_training" Type="bigint" Nullable="false" />
+          <Property Name="order" Type="bigint" Nullable="false" />
+          <Property Name="duration" Type="bigint" Nullable="false" />
+          <Property Name="frequency" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="light_intensity_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_training" Type="bigint" Nullable="false" />
+          <Property Name="order" Type="bigint" Nullable="false" />
+          <Property Name="duration" Type="bigint" Nullable="false" />
+          <Property Name="intensity" Type="bigint" Nullable="false" />
+        </EntityType>
         <EntityType Name="login">
           <Key>
             <PropertyRef Name="Id" />
@@ -34,14 +54,15 @@
           <Property Name="password" Type="nvarchar(max)" Nullable="false" />
           <Property Name="approved" Type="bigint" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "scalodrom.dbo.testtbl" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
-        <EntityType Name="testtbl">
+        <EntityType Name="sysdiagrams">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="diagram_id" />
           </Key>
-          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="msg" Type="nvarchar(max)" />
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="tr_path">
           <Key>
@@ -78,6 +99,30 @@
           <Property Name="name" Type="nvarchar" MaxLength="32" Nullable="false" />
           <Property Name="id_login_modif" Type="bigint" Nullable="false" />
         </EntityType>
+        <Association Name="FK__light_fre__id_tr__367C1819">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="light_frequency_series" Type="Self.light_frequency_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="light_frequency_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__light_int__id_tr__3A4CA8FD">
+          <End Role="training" Type="Self.training" Multiplicity="1" />
+          <End Role="light_intensity_series" Type="Self.light_intensity_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="light_intensity_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_angle_series_training_TRAINEE">
           <End Role="training" Type="Self.training" Multiplicity="1" />
           <End Role="angle_series" Type="Self.angle_series" Multiplicity="*" />
@@ -153,16 +198,21 @@
         <EntityContainer Name="Хранилище scalodromModel1Container">
           <EntitySet Name="angle_series" EntityType="Self.angle_series" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="grapple_series" EntityType="Self.grapple_series" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="light_frequency_series" EntityType="Self.light_frequency_series" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="light_intensity_series" EntityType="Self.light_intensity_series" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="login" EntityType="Self.login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tr_path" EntityType="Self.tr_path" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="trainee" EntityType="Self.trainee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="training" EntityType="Self.training" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="testtbl" EntityType="Self.testtbl" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [testtbl].[id] AS [id], 
-    [testtbl].[msg] AS [msg]
-    FROM [dbo].[testtbl] AS [testtbl]</DefiningQuery>
-          </EntitySet>
+          <AssociationSet Name="FK__light_fre__id_tr__367C1819" Association="Self.FK__light_fre__id_tr__367C1819">
+            <End Role="training" EntitySet="training" />
+            <End Role="light_frequency_series" EntitySet="light_frequency_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK__light_int__id_tr__3A4CA8FD" Association="Self.FK__light_int__id_tr__3A4CA8FD">
+            <End Role="training" EntitySet="training" />
+            <End Role="light_intensity_series" EntitySet="light_intensity_series" />
+          </AssociationSet>
           <AssociationSet Name="FK_angle_series_training_TRAINEE" Association="Self.FK_angle_series_training_TRAINEE">
             <End Role="training" EntitySet="training" />
             <End Role="angle_series" EntitySet="angle_series" />
@@ -188,8 +238,7 @@
             <End Role="training" EntitySet="training" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="scalodromModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -268,13 +317,8 @@
           <NavigationProperty Name="grapple_series" Relationship="Self.FK_grapple_series_training_TRAINEE" FromRole="training" ToRole="grapple_series" />
           <NavigationProperty Name="login" Relationship="Self.FK_training_id_login_modif" FromRole="training" ToRole="login" />
           <NavigationProperty Name="tr_path" Relationship="Self.FK_tr_path_training_TRAINEE" FromRole="training" ToRole="tr_path" />
-        </EntityType>
-        <EntityType Name="testtbl">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="msg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="light_frequency_series" Relationship="scalodromModel1.FK__light_fre__id_tr__32AB8735" FromRole="training" ToRole="light_frequency_series" />
+          <NavigationProperty Name="light_intensity_series" Relationship="scalodromModel1.FK__light_int__id_tr__282DF8C2" FromRole="training" ToRole="light_intensity_series" />
         </EntityType>
         <Association Name="FK_angle_series_training_TRAINEE">
           <End Role="training" Type="Self.training" Multiplicity="1" />
@@ -355,7 +399,6 @@
           <EntitySet Name="tr_path" EntityType="Self.tr_path" />
           <EntitySet Name="trainee" EntityType="Self.trainee" />
           <EntitySet Name="training" EntityType="Self.training" />
-          <EntitySet Name="testtbl" EntityType="Self.testtbl" />
           <AssociationSet Name="FK_angle_series_training_TRAINEE" Association="Self.FK_angle_series_training_TRAINEE">
             <End Role="training" EntitySet="training" />
             <End Role="angle_series" EntitySet="angle_series" />
@@ -380,7 +423,74 @@
             <End Role="training" EntitySet="training" />
             <End Role="tr_path" EntitySet="tr_path" />
           </AssociationSet>
+          <EntitySet Name="sysdiagrams" EntityType="scalodromModel1.sysdiagrams" />
+          <EntitySet Name="light_frequency_series" EntityType="scalodromModel1.light_frequency_series" />
+          <EntitySet Name="light_intensity_series" EntityType="scalodromModel1.light_intensity_series" />
+          <AssociationSet Name="FK__light_fre__id_tr__32AB8735" Association="scalodromModel1.FK__light_fre__id_tr__32AB8735">
+            <End Role="training" EntitySet="training" />
+            <End Role="light_frequency_series" EntitySet="light_frequency_series" />
+          </AssociationSet>
+          <AssociationSet Name="FK__light_int__id_tr__282DF8C2" Association="scalodromModel1.FK__light_int__id_tr__282DF8C2">
+            <End Role="training" EntitySet="training" />
+            <End Role="light_intensity_series" EntitySet="light_intensity_series" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="light_frequency_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="id_training" Type="Int64" Nullable="false" />
+          <Property Name="order" Type="Int64" Nullable="false" />
+          <Property Name="duration" Type="Int64" Nullable="false" />
+          <Property Name="frequency" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="scalodromModel1.FK__light_fre__id_tr__32AB8735" FromRole="light_frequency_series" ToRole="training" />
+        </EntityType>
+        <EntityType Name="light_intensity_series">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_training" Type="Int64" Nullable="false" />
+          <Property Name="order" Type="Int64" Nullable="false" />
+          <Property Name="duration" Type="Int64" Nullable="false" />
+          <Property Name="intensity" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="training" Relationship="scalodromModel1.FK__light_int__id_tr__282DF8C2" FromRole="light_intensity_series" ToRole="training" />
+        </EntityType>
+        <Association Name="FK__light_fre__id_tr__32AB8735">
+          <End Type="scalodromModel1.training" Role="training" Multiplicity="1" />
+          <End Type="scalodromModel1.light_frequency_series" Role="light_frequency_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="light_frequency_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__light_int__id_tr__282DF8C2">
+          <End Type="scalodromModel1.training" Role="training" Multiplicity="1" />
+          <End Type="scalodromModel1.light_intensity_series" Role="light_intensity_series" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="training">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="light_intensity_series">
+              <PropertyRef Name="id_training" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -457,11 +567,36 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="testtbl">
-            <EntityTypeMapping TypeName="scalodromModel1.testtbl">
-              <MappingFragment StoreEntitySet="testtbl">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="scalodromModel1.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="light_frequency_series">
+            <EntityTypeMapping TypeName="scalodromModel1.light_frequency_series">
+              <MappingFragment StoreEntitySet="light_frequency_series">
+                <ScalarProperty Name="frequency" ColumnName="frequency" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="order" ColumnName="order" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="msg" ColumnName="msg" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="light_intensity_series">
+            <EntityTypeMapping TypeName="scalodromModel1.light_intensity_series">
+              <MappingFragment StoreEntitySet="light_intensity_series">
+                <ScalarProperty Name="intensity" ColumnName="intensity" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="order" ColumnName="order" />
+                <ScalarProperty Name="id_training" ColumnName="id_training" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

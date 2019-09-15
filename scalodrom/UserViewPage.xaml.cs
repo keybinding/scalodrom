@@ -31,7 +31,7 @@ namespace scalodrom
         }
 
         TraineeWrapper i_trainee;
-        project_dbEntities1 db_context;
+        scalodromEntities3 db_context;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -50,7 +50,7 @@ namespace scalodrom
             i_trainee = new TraineeWrapper();
         }
 
-        public UserViewPage(trainee a_trainee, project_dbEntities1 a_db_context)
+        public UserViewPage(trainee a_trainee, scalodromEntities3 a_db_context)
         {
             InitializeComponent();
             DataContext = this;

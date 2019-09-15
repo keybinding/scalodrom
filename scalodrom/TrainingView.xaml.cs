@@ -37,7 +37,12 @@ namespace scalodrom
         }
         
 
-        public float Speed { get { return _speed;} set { _speed = value; Notify("Speed"); } }
+        public float Speed { get { return _speed;}
+            set {
+                _speed = value;
+                Notify("Speed");
+            }
+        }
 
         private long _start;
 
@@ -47,7 +52,7 @@ namespace scalodrom
     public class TrainingViewModel : PropertyChangedNotifier
     {
         training training = null;
-        project_dbEntities1 db_context = null;
+        scalodromEntities3 db_context = null;
         private SeriesCollection i_seriesCollection1 = null;
         private SeriesCollection i_seriesCollection2 = null;
         private SeriesCollection i_seriesCollection3 = null;
@@ -83,7 +88,7 @@ namespace scalodrom
         public Dictionary<long, SeriesCollection> path_graph_dict = new Dictionary<long, SeriesCollection>();
         public Dictionary<long, ObservableCollection<tr_pathWrapper>> path_col_dict = new Dictionary<long, ObservableCollection<tr_pathWrapper>>();
 
-        public TrainingViewModel(training a_tr, project_dbEntities1 a_db_context)
+        public TrainingViewModel(training a_tr, scalodromEntities3 a_db_context)
         {
             training = a_tr;
             db_context = a_db_context;
@@ -103,6 +108,7 @@ namespace scalodrom
             ConfigureCollbacksTrPath(i_trPath1, i_seriesCollection1, 1);
             ConfigureCollbacksTrPath(i_trPath2, i_seriesCollection2, 2);
             ConfigureCollbacksTrPath(i_trPath3, i_seriesCollection3, 3);
+            
         }
 
         private void ConfigureCollbacksTrPath(ObservableCollection<tr_pathWrapper> a_trPath, SeriesCollection a_seriesCollection, int a_num_path)
@@ -315,7 +321,7 @@ namespace scalodrom
             DataContext = model;
         }
 
-        public TrainingView(training a_tr, project_dbEntities1 a_db_context)
+        public TrainingView(training a_tr, scalodromEntities3 a_db_context)
         {
             InitializeComponent();
             model = new TrainingViewModel(a_tr, a_db_context);

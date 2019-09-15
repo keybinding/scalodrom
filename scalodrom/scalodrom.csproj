@@ -152,23 +152,14 @@
     <Compile Include="HighlightTest.xaml.cs">
       <DependentUpon>HighlightTest.xaml</DependentUpon>
     </Compile>
+    <Compile Include="light_frequency_series.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="light_intensity_series.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
     <Compile Include="MainContentWindow.xaml.cs">
       <DependentUpon>MainContentWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Model2.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model2.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model2.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model2.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model2.edmx</DependentUpon>
     </Compile>
     <Compile Include="Model3.Context.cs">
       <AutoGen>True</AutoGen>
@@ -193,13 +184,14 @@
     </Compile>
     <Compile Include="scalodrom classes\AddDeleteCommandSender.cs" />
     <Compile Include="scalodrom classes\HiResTimer.cs" />
+    <Compile Include="scalodrom classes\OpenDMX.cs" />
     <Compile Include="scalodrom classes\SlaveStorage.cs" />
     <Compile Include="scalodrom classes\TrackRow.cs" />
     <Compile Include="scalodrom classes\PropertyChangedNotifier.cs" />
     <Compile Include="scalodrom classes\RelayCommand.cs" />
     <Compile Include="scalodrom classes\TrackRowToggle.cs" />
     <Compile Include="scalodrom classes\Track.cs" />
-    <Compile Include="testtbl.cs">
+    <Compile Include="sysdiagrams.cs">
       <DependentUpon>Model3.tt</DependentUpon>
     </Compile>
     <Compile Include="trainee.cs">
@@ -296,13 +288,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="Model2.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model2.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Model2.edmx.diagram">
-      <DependentUpon>Model2.edmx</DependentUpon>
-    </None>
     <EntityDeploy Include="Model3.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model3.Designer.cs</LastGenOutput>
@@ -348,16 +333,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\photo.png" />
-    <Content Include="Model2.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model2.Context.cs</LastGenOutput>
-      <DependentUpon>Model2.edmx</DependentUpon>
-    </Content>
-    <Content Include="Model2.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model2.edmx</DependentUpon>
-      <LastGenOutput>Model2.cs</LastGenOutput>
-    </Content>
+    <Resource Include="images\strobo.png" />
     <Content Include="Model3.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model3.edmx</DependentUpon>

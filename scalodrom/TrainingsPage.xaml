@@ -14,7 +14,7 @@
 
     <Grid Margin="0" DataContext="{StaticResource trainingViewSource}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="312.5"/>
             <ColumnDefinition/>
 
         </Grid.ColumnDefinitions>
@@ -32,10 +32,11 @@
             </DataGrid>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"/>
-                    <ColumnDefinition Width="25*"/>
-                    <ColumnDefinition Width="25*"/>
-                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="20*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
@@ -76,6 +77,16 @@
                         <Image Source="images/sun.png"></Image>
                     </Button>
                     <Label Name="detailsBtnLable" Content="Зацепы" Grid.Row="1"/>
+                </Grid>
+                <Grid Grid.Column="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="67*"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Name="Lights" Margin="5" Click="strobos_Click">
+                        <Image Source="images/strobo.png"></Image>
+                    </Button>
+                    <Label Name="ligthsBtnLable" Content="Свет" Grid.Row="1"/>
                 </Grid>
             </Grid>
         </Grid>
