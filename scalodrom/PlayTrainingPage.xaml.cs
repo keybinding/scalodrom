@@ -53,6 +53,7 @@ namespace scalodrom
 
         List<trPathNodeModel> angles = new List<trPathNodeModel>();
         trPathNodeModel _currentAngle;
+        float _realAngle = 0;
         private int _currentAngleIndex;
 
         bool switchAngle = false;
@@ -391,6 +392,7 @@ namespace scalodrom
         }
 
         bool _justInit = false;
+        bool _switched = false;
         public void ListenPort()
         {
             _slavePort = new SerialPort("COM5");
@@ -407,33 +409,29 @@ namespace scalodrom
             IModbusSlave slave1 = factory.CreateSlave(4, dataStore); //5 - у тестового, 4 - scalodrom
             dataStore.CoilDiscretes.StorageOperationOccurred += (sender, args) =>
             {
-                if(args.Operation == PointOperation.Write)
-                {
-                    //File.AppendAllLines("log.txt", new string[1] { $"CoilDiscretes: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
-                }
-                else
-                {
-                    
-                }
-                
+                File.AppendAllLines("log.txt", new string[1] { $"CoilDiscretes: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
                 //File.AppendAllLines("log.txt", new string[1] { $"CoilDiscretes: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
             };
             dataStore.CoilInputs.StorageOperationOccurred += (sender, args) =>
             {
+                File.AppendAllLines("log.txt", new string[1] { $"CoilInputs: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
                 if (args.Operation == PointOperation.Read)
                 {
 
                     //i = "c-i read addr = " + args.StartingAddress.ToString() + " cnt = " + args.Points.Length.ToString();
                     //dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true });
-                    if (switchAngle || _justInit)
+                    if ( Math.Abs(_currentAngle.Speed - _realAngle) > 1)
                     {
-                        dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true });
-                        switchAngle = false;
-                        _justInit = false;
+                        if (!switchAngle)
+                        {
+                            dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { true, false });
+                            switchAngle = true;
+                        }
                     }
                     else
                     {
-                        dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { false });
+                        dataStore.CoilInputs.WritePoints(args.StartingAddress, new bool[] { false, false });
+                        switchAngle = false;
                     }
 
                 }
@@ -447,7 +445,7 @@ namespace scalodrom
             List<ushort> adr = new List<ushort>(); //5 addr - angle, 7 - flag
             dataStore.InputRegisters.StorageOperationOccurred += (sender, args) =>
             {
-                
+                File.AppendAllLines("log.txt", new string[1] { $"InputRegisters: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
                 if (args.Operation == PointOperation.Write)
                 {
                     //h = "yes"; //Console.WriteLine($"Input registers: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}");
@@ -470,11 +468,11 @@ namespace scalodrom
                         float f1 = 0.0f; float f2 = 0.0f; float f3 = 0.0f;
                         if (IsPlaying)
                         {
-                            if (_currentPoint1 != null) f1 = _currentPoint1.Speed;
+                            if (_currentPoint1 != null) f1 = -1 *_currentPoint1.Speed;
                             else f1 = 0.0f;
-                            if (_currentPoint2 != null) f2 = _currentPoint2.Speed;
+                            if (_currentPoint2 != null) f2 = -1 * _currentPoint2.Speed;
                             else f2 = 0.0f;
-                            if (_currentPoint3 != null) f3 = _currentPoint3.Speed;
+                            if (_currentPoint3 != null) f3 = -1 * _currentPoint3.Speed;
                             else f3 = 0.0f;
                         }
                         else
@@ -489,9 +487,17 @@ namespace scalodrom
 
                         dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high3, low3, high1, low1, high2, low2});
                     }
+                    else if(args.StartingAddress == 21)
+                    {
+                        byte[] hl = BitConverter.GetBytes(_currentAngle.Speed);
+                        ushort high = BitConverter.ToUInt16(hl, 0);
+                        ushort low = BitConverter.ToUInt16(hl, 2);
+                        dataStore.InputRegisters.WritePointsSilent(args.StartingAddress, new ushort[] { high, low });
+                        //Dbg = _currentAngle.ToString();
+                    }
                     else
                     {
-                        //h = args.ToString() + " zzzz";
+                        Dbg += args.ToString() + " zzzz";
                     }
                 }
             };
@@ -503,20 +509,22 @@ namespace scalodrom
                 //Console.WriteLine($"Holding registers: {args.Operation} starting at {args.StartingAddress}  {args.Points[0]}");
                 if (args.Operation == PointOperation.Write)
                 {
-                    //File.AppendAllLines("log.txt", new string[1] { $"HoldingRegisters: {args.Operation} starting at {args.StartingAddress} {args.Points.Length}" });
-                    float curAngle = -15.0f;
-                    byte[] ab = BitConverter.GetBytes(curAngle);
-                    ushort high = BitConverter.ToUInt16(ab, 0);
-                    ushort low = BitConverter.ToUInt16(ab, 2);
-                    dataStore.HoldingRegisters.WritePointsSilent(7, new ushort[] { high, low });
+                    if (args.StartingAddress == 7)
+                    {
+                        ushort high = args.Points[1];
+                        ushort low = args.Points[2];
+                        byte[] bytes = new byte[4];
+                        bytes[0] = (byte)(high & 0xFF);
+                        bytes[1] = (byte)(high >> 8);
+                        bytes[2] = (byte)(low & 0xFF);
+                        bytes[3] = (byte)(low >> 8);
+                        _realAngle = BitConverter.ToSingle(bytes, 0);
+                        File.AppendAllLines("log.txt", new string[1] { $"HoldingRegisters: {args.Operation} starting at {args.StartingAddress} {args.Points.Length} angle = {_realAngle}" });
+                        Dbg = _realAngle.ToString();
+                    }
                 }
                 else
                 {
-                    float curAngle = -15.0f;
-                    byte[] ab = BitConverter.GetBytes(curAngle);
-                    ushort high = BitConverter.ToUInt16(ab, 0);
-                    ushort low = BitConverter.ToUInt16(ab, 2);
-                    dataStore.HoldingRegisters.WritePointsSilent(7, new ushort[] { high, low });
                 }
             };
             slaveNetwork.AddSlave(slave1);

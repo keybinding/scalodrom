@@ -69,7 +69,8 @@
             </StackPanel>
             
         </Grid>
-        <StackPanel Name="PlayerPanel" Orientation="Horizontal" Grid.Row="1">
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+        <StackPanel Name="PlayerPanel" Orientation="Horizontal">
             <Button Name="bt_stop" Width="40" Height="40" Margin="50,0,0,0">
                 <Image Source="images/stop.png"></Image>
             </Button>
@@ -84,7 +85,8 @@
             </Button>
             <ProgressBar Name="PrgBar" Height="50" Width="800" Margin="15,0,0,0" Value="{Binding CurPrgBarValue}" Maximum="{Binding MaxPrgBarValue}" Minimum="0"></ProgressBar>
             <TextBox Name="tb_countDown" IsReadOnly="True" Height="30" Text="{Binding CurrentTime}" FontSize="20" Margin="15,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>
-            <!--<TextBox Name="tb_dbg" IsReadOnly="True" Height="30" Width="600" Text="{Binding Dbg}" FontSize="20" Margin="50,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>-->
+        </StackPanel>
+            <TextBox Name="tb_dbg" IsReadOnly="True" Height="30" Width="600" Text="{Binding Dbg}" FontSize="20" Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center"></TextBox>
         </StackPanel>
     </Grid>
 </Page>
